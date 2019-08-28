@@ -2,11 +2,9 @@ package com.codeoftheweb.salvo;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Game {
@@ -32,4 +30,9 @@ public class Game {
         return creationDate;
     }
 
+
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "gamePlayer_id")
+    private GamePlayer gamePlayer1;
 }

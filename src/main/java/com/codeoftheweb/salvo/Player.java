@@ -3,10 +3,7 @@ package com.codeoftheweb.salvo;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Player {
@@ -32,4 +29,7 @@ public class Player {
         return userName;
     }
 
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "gamePlayer_id")
+    private GamePlayer gamePlayer1;
 }
