@@ -21,20 +21,14 @@ public class SalvoController {
         return gameRepository
                 .findAll()
                 .stream()
-                .map(game -> makeGameDTO(game))
+                .map(game -> game.toDTO())
                 .collect(Collectors.toList());
     }
-    private Map<String, Object> makeGameDTO(Game game){
+
+    /*private Map<String, Object> makeGameDTO(Game game) {
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
         dto.put("id", game.getId());
-        dto.put("creationDate",game.getCreationDate());
-        dto.put("gamePlayers", getAllGamePlayers(game.getGamePlayers()));
+        dto.put("creationDate", game.getCreationDate());
         return dto;
-    }
-    private List<Object> getPlayerList(List<GamePlayer> gamePlayers){
-        return gamePlayers
-                .stream()
-                .map(gamePlayer -> makeGameDTO(gamePlayer))
-                .collect(Collectors.toList());
-    }
+    }*/
 }

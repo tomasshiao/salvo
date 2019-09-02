@@ -4,6 +4,8 @@ package com.codeoftheweb.salvo;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 
 @Entity
@@ -15,8 +17,7 @@ public class Player {
     private Long id;
     private String userName;
 
-    @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
-    @JoinColumn(name = "gamePlayer_id")
+    @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
     private Set<GamePlayer> gamePlayers;
 
     public Player() {
@@ -31,8 +32,16 @@ public class Player {
     }
 
     public String getUserName() {
-
         return userName;
     }
 
+    public Set<GamePlayer> getGamePlayers() {
+        return gamePlayers;
+    }
+    public Map<String, Object> toDTO(){
+        Map<String, Object> dto = new LinkedHashMap<String, Object>();
+        dto.put("id", this.getId());
+        dto.put("email",this.getUserName());
+        return dto;
+    }
 }

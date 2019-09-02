@@ -4,8 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 public class Game {
@@ -17,7 +16,7 @@ public class Game {
     private Date creationDate;
 
     @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
-    private List<GamePlayer> gamePlayers;
+    private Set<GamePlayer> gamePlayers;
 
     public Game() {
     }
@@ -34,7 +33,15 @@ public class Game {
         return creationDate;
     }
 
-    public void getGamePlayers(List<GamePlayer> gamePlayers) {
-        this.gamePlayers = gamePlayers;
+    public Set<GamePlayer> getGamePlayers() {
+        return  gamePlayers;
     }
+    public Map<String, Object> toDTO(){
+        Map<String, Object> dto = new LinkedHashMap<String, Object>();
+        dto.put("id", this.getId());
+        dto.put("creationDate",this.getCreationDate());
+        dto.put("gamePlayers", this.getGamePlayers().stream().map(gamePlayer -> gamePlayer.toDTO()));
+        return dto;
+    }
+
 }
