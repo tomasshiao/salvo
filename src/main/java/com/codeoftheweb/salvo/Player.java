@@ -4,6 +4,7 @@ package com.codeoftheweb.salvo;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class Player {
@@ -13,6 +14,10 @@ public class Player {
 
     private Long id;
     private String userName;
+
+    @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
+    @JoinColumn(name = "gamePlayer_id")
+    private Set<GamePlayer> gamePlayers;
 
     public Player() {
     }
@@ -26,10 +31,8 @@ public class Player {
     }
 
     public String getUserName() {
+
         return userName;
     }
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "gamePlayer_id")
-    private GamePlayer gamePlayer1;
 }

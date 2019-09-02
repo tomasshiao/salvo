@@ -1,5 +1,6 @@
 package com.codeoftheweb.salvo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -14,6 +15,9 @@ public class Game {
 
     private Long id;
     private Date creationDate;
+
+    @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
+    private List<GamePlayer> gamePlayers;
 
     public Game() {
     }
@@ -30,9 +34,7 @@ public class Game {
         return creationDate;
     }
 
-
-
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "gamePlayer_id")
-    private GamePlayer gamePlayer1;
+    public void getGamePlayers(List<GamePlayer> gamePlayers) {
+        this.gamePlayers = gamePlayers;
+    }
 }

@@ -16,27 +16,27 @@ public class GamePlayer {
     private Date joinTime;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="game_id")
-    private Game game1;
+    private Game game;
 
     @JsonIgnore
-    public Game getGame1() {
-        return game1;
+    public Game getGame() {
+        return game;
     }
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="player_id")
-    private Player player1;
+    private Player player;
 
     @JsonIgnore
-    public Player getPlayer1() {
-        return player1;
+    public Player getPlayer() {
+        return player;
     }
 
     public GamePlayer() { }
 
-    public GamePlayer (Player player1, Game game1) {
-        this.player1 = player1;
-        this.game1 = game1;
+    public GamePlayer (Player player, Game game) {
+        this.player = player;
+        this.game = game;
         this.joinTime = new Date();
     }
     public Long getId(){return id;}
