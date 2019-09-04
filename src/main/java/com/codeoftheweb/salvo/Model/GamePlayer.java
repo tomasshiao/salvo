@@ -1,4 +1,4 @@
-package com.codeoftheweb.salvo;
+package com.codeoftheweb.salvo.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
@@ -53,5 +53,10 @@ public class GamePlayer {
         dto.put("player", this.getPlayer().toDTO());
         return dto;
     }
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "ship")
+    private Ship ship;
+    @JsonIgnore
+    public Ship getShip(){return ship;}
 
 }

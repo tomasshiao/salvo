@@ -1,12 +1,12 @@
-package com.codeoftheweb.salvo;
+package com.codeoftheweb.salvo.Controller;
 
+import com.codeoftheweb.salvo.Repositories.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -25,6 +25,7 @@ public class SalvoController {
                 .collect(Collectors.toList());
     }
 
+    
     /*private Map<String, Object> makeGameDTO(Game game) {
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
         dto.put("id", game.getId());
