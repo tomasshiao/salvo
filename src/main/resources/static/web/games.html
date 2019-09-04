@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Salvo!</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 </head>
 <body>
-<ol>
-    <li>
-
+<ol id="app">
+    <li v-for="game in games">
+        <b>{{game.gamePlayers[0].player.email}}</b> vs <b>{{game.gamePlayers[1].player.email}}</b>
     </li>
 </ol>
+<script src="https://code.jquery.com/jquery-2.2.0.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="games.js"></script>
 </body>
 </html>
