@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 @Entity
 public class GamePlayer {
@@ -21,7 +22,7 @@ public class GamePlayer {
     private Game game;
 
     @JsonIgnore
-    public Game getGame() {
+    public Game getGame(){
         return game;
     }
 
@@ -34,6 +35,15 @@ public class GamePlayer {
         return player;
     }
 
+    @OneToMany(mappedBy = "ships", fetch = FetchType.EAGER)
+    @JoinColumn(name = "ship")
+    private Set<Ship> ships;
+
+    @JsonIgnore
+    public Set<Ship> getShip(){
+        return ships;
+    }
+
     public GamePlayer() { }
 
     public GamePlayer (Player player, Game game) {
@@ -44,19 +54,17 @@ public class GamePlayer {
     public Long getId(){
         return id;
     }
+
     public Date getJoinTime(){
         return joinTime;
     }
+
     public Map<String, Object> toDTO(){
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
         dto.put("id", this.getId());
         dto.put("player", this.getPlayer().toDTO());
         return dto;
     }
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "ship")
-    private Ship ship;
-    @JsonIgnore
-    public Ship getShip(){return ship;}
+
 
 }
