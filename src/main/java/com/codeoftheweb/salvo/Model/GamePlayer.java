@@ -44,6 +44,15 @@ public class GamePlayer {
         return ships;
     }
 
+    @OneToMany(mappedBy = "salvos", fetch = FetchType.EAGER)
+    @JoinColumn(name = "salvo")
+    private Set<Salvo> salvos;
+
+    @JsonIgnore
+    public Set<Salvo> getSalvos(){
+        return salvos;
+    }
+
     public GamePlayer() { }
 
     public GamePlayer (Player player, Game game) {

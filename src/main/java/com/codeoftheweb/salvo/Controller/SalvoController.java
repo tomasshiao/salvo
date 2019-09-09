@@ -55,6 +55,13 @@ public class SalvoController {
         dto.put("creationDate", gamePlayer.getGame().getCreationDate());
         dto.put("gamePlayers", getGamesPlayersList(gamePlayer.getGame().getGamePlayers()));
         dto.put("ships", getShipsList(gamePlayer.getShip()));
+        /*dto.put("salvoes", gamePlayer.getGame().getGamePlayers().stream()
+                .flatMap(gp -> gp.getSalvoes()
+                        .stream()
+                        .map(salvo -> salvoDTO(salvo))
+                )
+                .collect(Collectors.toList())
+        );*/
 
         return dto;
     }
