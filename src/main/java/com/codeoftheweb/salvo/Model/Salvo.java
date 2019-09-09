@@ -12,20 +12,20 @@ public class Salvo {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name="native", strategy="native")
-
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    private GamePlayer gamePlayers;
+    @JoinColumn(name="gamePlayer_id")
+    private GamePlayer gamePlayer;
 
-    private Integer turnNumber;
+    private int turnNumber;
 
     @ElementCollection
     @Column(name = "salvoLocation")
     private Set<String> salvoLocation;
 
-    public Salvo(GamePlayer gamePlayers, Integer turnNumber, Set<String> salvoLocation){
-        this.gamePlayers = gamePlayers;
+    public Salvo(GamePlayer gamePlayer, int turnNumber, Set<String> salvoLocation){
+        this.gamePlayer = gamePlayer;
         this.turnNumber = turnNumber;
         this.salvoLocation = salvoLocation;
     }
@@ -35,16 +35,17 @@ public class Salvo {
     }
 
     public GamePlayer getGamePlayers() {
-        return gamePlayers;
+        return gamePlayer;
     }
 
-    public Integer getTurnNumber() {
+    public int getTurnNumber() {
         return turnNumber;
     }
 
     public Set<String> getSalvoLocation() {
         return salvoLocation;
     }
+
 
     public Map<String, Object> toDTO(){
         Map<String, Object> dto = new LinkedHashMap<String, Object>();

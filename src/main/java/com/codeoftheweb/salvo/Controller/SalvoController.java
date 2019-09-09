@@ -22,7 +22,11 @@ public class SalvoController {
 
     @Autowired
     GameRepository gameRepository;
+
+    @Autowired
     GamePlayerRepository gamePlayerRepository;
+
+    @Autowired
     ShipRepository shipRepository;
 
     @RequestMapping("/games")
@@ -44,8 +48,8 @@ public class SalvoController {
 
 
     @RequestMapping("/game_view/{id}")
-    public Map<String, Object> getGameView(@PathVariable long id) {
-        return gameViewDTO(gamePlayerRepository.findById(id).get());
+    public Map<String, Object> getGameView(@PathVariable Long id) {
+        return gameViewDTO(gamePlayerRepository.getOne(id));
     }
 
     private Map<String, Object> gameViewDTO(GamePlayer gamePlayer) {
@@ -54,14 +58,14 @@ public class SalvoController {
         dto.put("id", gamePlayer.getGame().getId());
         dto.put("creationDate", gamePlayer.getGame().getCreationDate());
         dto.put("gamePlayers", getGamesPlayersList(gamePlayer.getGame().getGamePlayers()));
-        dto.put("ships", getShipsList(gamePlayer.getShip()));
-        /*dto.put("salvoes", gamePlayer.getGame().getGamePlayers().stream()
+        dto.put("ships", getShipsList(gamePlayer.getShips()));
+        dto.put("salvoes", gamePlayer.getGame().getGamePlayers().stream()
                 .flatMap(gp -> gp.getSalvoes()
                         .stream()
-                        .map(salvo -> salvoDTO(salvo))
+                        .map(salvo -> salvo.toDTO())
                 )
                 .collect(Collectors.toList())
-        );*/
+        );
 
         return dto;
     }

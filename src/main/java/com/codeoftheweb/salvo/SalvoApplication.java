@@ -23,7 +23,11 @@ public class SalvoApplication {
 	}
 
 	@Bean
-	public CommandLineRunner initData(PlayerRepository playerRepository, GameRepository gameRepository, GamePlayerRepository gamePlayerRepository, ShipRepository shipRepository, SalvoRepository salvoRepository){
+	public CommandLineRunner initData(PlayerRepository playerRepository,
+									  GameRepository gameRepository,
+									  GamePlayerRepository gamePlayerRepository,
+									  ShipRepository shipRepository,
+									  SalvoRepository salvoRepository){
 		return(arg) -> {
 
 			Player player1 = new Player("j.bauer@ctu.gov");
@@ -71,6 +75,8 @@ public class SalvoApplication {
 			Ship ship5 = new Ship("Destroyer",shipL5,gamePlayer2);
 
 			shipRepository.saveAll(Arrays.asList(ship1,ship2,ship3,ship4,ship5));
+
+
 		};
 	}
 

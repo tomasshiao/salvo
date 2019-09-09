@@ -21,36 +21,29 @@ public class GamePlayer {
     @JoinColumn(name="game_id")
     private Game game;
 
-    @JsonIgnore
-    public Game getGame(){
-        return game;
-    }
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="player_id")
     private Player player;
 
+
+    @OneToMany(mappedBy = "gamePlayer", fetch = FetchType.EAGER)
+    private Set<Ship> ships;
+
+    @OneToMany(mappedBy = "gamePlayer", fetch = FetchType.EAGER)
+    private Set<Salvo> salvoes;
+
+    @JsonIgnore
+    public Set<Ship> getShips(){
+        return ships;
+    }
     @JsonIgnore
     public Player getPlayer() {
         return player;
     }
 
-    @OneToMany(mappedBy = "ships", fetch = FetchType.EAGER)
-    @JoinColumn(name = "ship")
-    private Set<Ship> ships;
-
     @JsonIgnore
-    public Set<Ship> getShip(){
-        return ships;
-    }
-
-    @OneToMany(mappedBy = "salvos", fetch = FetchType.EAGER)
-    @JoinColumn(name = "salvo")
-    private Set<Salvo> salvos;
-
-    @JsonIgnore
-    public Set<Salvo> getSalvos(){
-        return salvos;
+    public Game getGame(){
+        return game;
     }
 
     public GamePlayer() { }
@@ -64,9 +57,17 @@ public class GamePlayer {
         return id;
     }
 
+
+    @JsonIgnore
+    public Set<Salvo> getSalvoes(){
+        return salvoes;
+    }
+
     public Date getJoinTime(){
         return joinTime;
     }
+
+
 
     public Map<String, Object> toDTO(){
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
