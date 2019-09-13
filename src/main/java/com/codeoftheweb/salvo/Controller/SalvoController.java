@@ -4,6 +4,7 @@ import com.codeoftheweb.salvo.Model.GamePlayer;
 import com.codeoftheweb.salvo.Model.Ship;
 import com.codeoftheweb.salvo.Repositories.GamePlayerRepository;
 import com.codeoftheweb.salvo.Repositories.GameRepository;
+import com.codeoftheweb.salvo.Repositories.SalvoRepository;
 import com.codeoftheweb.salvo.Repositories.ShipRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,6 +47,14 @@ public class SalvoController {
                 .collect(Collectors.toList());
     }
 
+    public List<Object> getShipsList(Set<Ship> ships) {
+        return shipRepository
+                .findAll()
+                .stream()
+                .map(ship -> ship.toDTO())
+                .collect(Collectors.toList());
+    }
+
 
     @RequestMapping("/game_view/{id}")
     public Map<String, Object> getGameView(@PathVariable Long id) {
@@ -53,11 +62,7 @@ public class SalvoController {
     }
 
     private Map<String, Object> gameViewDTO(GamePlayer gamePlayer) {
-        Map<String, Object> dto = new LinkedHashMap<>();
-
-        dto.put("id", gamePlayer.getGame().getId());
-        dto.put("creationDate", gamePlayer.getGame().getCreationDate());
-        dto.put("gamePlayers", getGamesPlayersList(gamePlayer.getGame().getGamePlayers()));
+        Map<String, Object> dto = gamePlayer.getGame().toDTO();
         dto.put("ships", getShipsList(gamePlayer.getShips()));
         dto.put("salvoes", gamePlayer.getGame().getGamePlayers().stream()
                 .flatMap(gp -> gp.getSalvoes()
@@ -69,13 +74,4 @@ public class SalvoController {
 
         return dto;
     }
-
-    public List<Object> getShipsList(Set<Ship> ships) {
-        return shipRepository
-                .findAll()
-                .stream()
-                .map(ship -> ship.toDTO())
-                .collect(Collectors.toList());
-    }
-
 }

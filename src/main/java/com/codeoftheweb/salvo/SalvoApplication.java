@@ -1,9 +1,6 @@
 package com.codeoftheweb.salvo;
 
-import com.codeoftheweb.salvo.Model.Game;
-import com.codeoftheweb.salvo.Model.GamePlayer;
-import com.codeoftheweb.salvo.Model.Player;
-import com.codeoftheweb.salvo.Model.Ship;
+import com.codeoftheweb.salvo.Model.*;
 import com.codeoftheweb.salvo.Repositories.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -27,7 +24,8 @@ public class SalvoApplication {
 									  GameRepository gameRepository,
 									  GamePlayerRepository gamePlayerRepository,
 									  ShipRepository shipRepository,
-									  SalvoRepository salvoRepository){
+									  SalvoRepository salvoRepository,
+									  ScoreRepository scoreRepository){
 		return(arg) -> {
 
 			Player player1 = new Player("j.bauer@ctu.gov");
@@ -76,6 +74,18 @@ public class SalvoApplication {
 
 			shipRepository.saveAll(Arrays.asList(ship1,ship2,ship3,ship4,ship5));
 
+			Set<String> salvoL1 = new HashSet<>(Arrays.asList("H2","H3","H4"));
+			Set<String> salvoL2 = new HashSet<>(Arrays.asList("E1","F1","G1"));
+			Set<String> salvoL3 = new HashSet<>(Arrays.asList("B4","B5"));
+			Set<String> salvoL4 = new HashSet<>(Arrays.asList("B5","C5","D5"));
+			Set<String> salvoL5 = new HashSet<>(Arrays.asList("F1","F2"));
+			Salvo salvo1 = new Salvo(gamePlayer1,1, salvoL1);
+			Salvo salvo2 = new Salvo(gamePlayer1,2, salvoL2);
+			Salvo salvo3 = new Salvo(gamePlayer1,3, salvoL3);
+			Salvo salvo4 = new Salvo(gamePlayer2,1, salvoL4);
+			Salvo salvo5 = new Salvo(gamePlayer2,2, salvoL5);
+
+			salvoRepository.saveAll(Arrays.asList(salvo1,salvo2,salvo3,salvo4,salvo5));
 
 		};
 	}

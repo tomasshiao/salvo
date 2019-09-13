@@ -24,6 +24,8 @@ public class Salvo {
     @Column(name = "salvoLocation")
     private Set<String> salvoLocation;
 
+    public Salvo(){};
+
     public Salvo(GamePlayer gamePlayer, int turnNumber, Set<String> salvoLocation){
         this.gamePlayer = gamePlayer;
         this.turnNumber = turnNumber;
@@ -34,7 +36,7 @@ public class Salvo {
         return id;
     }
 
-    public GamePlayer getGamePlayers() {
+    public GamePlayer getGamePlayer() {
         return gamePlayer;
     }
 
@@ -50,7 +52,7 @@ public class Salvo {
     public Map<String, Object> toDTO(){
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
         dto.put("turn", this.getTurnNumber());
-        dto.put("player", this.getGamePlayers().getPlayer().getId());
+        dto.put("player", this.getGamePlayer().getPlayer().getId());
         dto.put("locations", this.getSalvoLocation());
         return dto;
     }
