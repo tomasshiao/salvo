@@ -30,7 +30,7 @@ public class GamePlayer {
     private Set<Salvo> salvoes = new HashSet<>();
 
     @OneToMany(mappedBy = "gamePlayer", fetch = FetchType.EAGER)
-    private Set<Salvo> scores = new HashSet<>();
+    private Set<Score> scores = new HashSet<>();
 
     @JsonIgnore
     public Game getGame(){ return game; }
@@ -46,8 +46,8 @@ public class GamePlayer {
     public Set<Salvo> getSalvoes(){
         return salvoes;
     }
-   // @JsonIgnore
-    //public Score getScores(){return scores;}
+    @JsonIgnore
+    public Set<Score> getScores(){return scores;}
 
     public GamePlayer() { }
 

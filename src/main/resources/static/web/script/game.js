@@ -61,3 +61,4 @@ function isHit(shipLocation,salvoes,playerId) {
   });
   return hit;
 }
+

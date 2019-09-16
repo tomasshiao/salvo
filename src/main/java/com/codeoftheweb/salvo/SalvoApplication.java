@@ -19,6 +19,10 @@ public class SalvoApplication {
 		SpringApplication.run(SalvoApplication.class, args);
 	}
 
+	//@Bean
+	//public PasswordEncoder passwordEncoder(){
+	// return PasswordEncoderFactories.createDelegatingPasswordEncoders();
+	// }
 	@Bean
 	public CommandLineRunner initData(PlayerRepository playerRepository,
 									  GameRepository gameRepository,
@@ -87,7 +91,28 @@ public class SalvoApplication {
 
 			salvoRepository.saveAll(Arrays.asList(salvo1,salvo2,salvo3,salvo4,salvo5));
 
+
 		};
 	}
 
 }
+/*
+* @Configuration
+* class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter{
+* @Autowired
+* PlayerRepository playerRepository
+* @Override
+* public void init(AuthenticationManagerBuilder auth) throws Exception {
+* auth.userDetailsService(inputName ->{
+* Player player = playerRepository.findByUserName(inputName);
+* if(player != null){
+* return new User(player.getUserName(), player.getPassword),
+* AuthorityUtils.createAuthorityList("USER"));
+* }else{
+* throw new UsernameNotFoundException("unknown user: " + inputName);
+* }
+* }
+* }
+* }
+*
+* */

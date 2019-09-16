@@ -5,6 +5,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -18,13 +19,21 @@ public class Player {
     private String userName;
 
     @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
-    private Set<GamePlayer> gamePlayers;
+    private Set<GamePlayer> gamePlayers = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
+    private Set<Score> scores = new LinkedHashSet<>();
+
+
+    //private String password
+
 
     public Player() {
     }
 
     public Player(String userName) {
         this.userName = userName;
+        //this.password = password
     }
 
     public Long getId() {
@@ -35,9 +44,16 @@ public class Player {
         return userName;
     }
 
+    //public String getPassword(){return password;}
+
     public Set<GamePlayer> getGamePlayers() {
         return gamePlayers;
     }
+
+    public Set<Score> getScores(Game game) {
+        return scores;
+    }
+
     public Map<String, Object> toDTO(){
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
         dto.put("id", this.getId());

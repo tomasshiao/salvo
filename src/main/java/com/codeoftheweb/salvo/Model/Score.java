@@ -16,13 +16,13 @@ public class Score {
     @JoinColumn(name="gamePlayer_id")
     private GamePlayer gamePlayer;
 
-    private String wins;
-    private String losses;
-    private String ties;
+    private Double wins;
+    private Double losses;
+    private Double ties;
 
     public Score(){
     }
-    public Score(String wins, String losses, String ties, GamePlayer gamePlayer){
+    public Score(Double wins, Double losses, Double ties, GamePlayer gamePlayer){
         this.wins = wins;
         this.losses = losses;
         this.ties = ties;
@@ -37,15 +37,15 @@ public class Score {
         return gamePlayer;
     }
 
-    public String getWins() {
+    public Double getWins() {
         return wins;
     }
 
-    public String getLosses() {
+    public Double getLosses() {
         return losses;
     }
 
-    public String getTies() {
+    public Double getTies() {
         return ties;
     }
 
