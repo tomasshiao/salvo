@@ -1,59 +1,58 @@
 package com.codeoftheweb.salvo.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.Date;
 
+@Entity
 public class Score {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name="native", strategy="native")
-    private Long id;
+    private long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="gamePlayer_id")
-    private GamePlayer gamePlayer;
+    @JoinColumn(name="game_id")
+    private Game game;
 
-    private Double wins;
-    private Double losses;
-    private Double ties;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="player_id")
+    private Player player;
+
+    private Date finishedDate = new Date();
+
+    private double score;
 
     public Score(){
     }
-    public Score(Double wins, Double losses, Double ties, GamePlayer gamePlayer){
-        this.wins = wins;
-        this.losses = losses;
-        this.ties = ties;
-        this.gamePlayer = gamePlayer;
+    public Score(double score, Game game, Player player){
+        this.score = score;
+        this.game = game;
+        this.player = player;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public GamePlayer getGamePlayer() {
-        return gamePlayer;
+    @JsonIgnore
+    public Game getGame() {
+        return game;
     }
 
-    public Double getWins() {
-        return wins;
+    @JsonIgnore
+    public Player getPlayer() {
+        return player;
     }
 
-    public Double getLosses() {
-        return losses;
+    public Date getFinishedDate() {
+        return finishedDate;
     }
 
-    public Double getTies() {
-        return ties;
+    public double getScore() {
+        return score;
     }
 
-    public Map<String,Object> toDTO(){
-        Map<String, Object> dto = new LinkedHashMap<>();
-        dto.put("wins", this.getWins());
-        dto.put("losses", this.getLosses());
-        dto.put("ties", this.getTies());
-        return dto;
-    }
 }

@@ -29,9 +29,6 @@ public class GamePlayer {
     @OneToMany(mappedBy = "gamePlayer", fetch = FetchType.EAGER)
     private Set<Salvo> salvoes = new HashSet<>();
 
-    @OneToMany(mappedBy = "gamePlayer", fetch = FetchType.EAGER)
-    private Set<Score> scores = new HashSet<>();
-
     @JsonIgnore
     public Game getGame(){ return game; }
     @JsonIgnore
@@ -46,8 +43,6 @@ public class GamePlayer {
     public Set<Salvo> getSalvoes(){
         return salvoes;
     }
-    @JsonIgnore
-    public Set<Score> getScores(){return scores;}
 
     public GamePlayer() { }
 

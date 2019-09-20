@@ -1,11 +1,9 @@
 package com.codeoftheweb.salvo.Controller;
 
 import com.codeoftheweb.salvo.Model.GamePlayer;
+import com.codeoftheweb.salvo.Model.Player;
 import com.codeoftheweb.salvo.Model.Ship;
-import com.codeoftheweb.salvo.Repositories.GamePlayerRepository;
-import com.codeoftheweb.salvo.Repositories.GameRepository;
-import com.codeoftheweb.salvo.Repositories.SalvoRepository;
-import com.codeoftheweb.salvo.Repositories.ShipRepository;
+import com.codeoftheweb.salvo.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -71,7 +69,10 @@ public class SalvoController {
                 )
                 .collect(Collectors.toList())
         );
-
+        return dto;
+    }
+    private Map<String, Object> leaderboard(Player player){
+        Map<String, Object> dto = player.LeaderboardDTO();
         return dto;
     }
 }
