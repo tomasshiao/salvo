@@ -26,7 +26,7 @@ public class SalvoController {
     GamePlayerRepository gamePlayerRepository;
 
     @Autowired
-    ShipRepository shipRepository;
+    PlayerRepository playerRepository;
 
     @RequestMapping("/games")
     public List<Object> getGamesList() {
@@ -38,16 +38,14 @@ public class SalvoController {
     }
 
     public List<Object> getGamesPlayersList(Set<GamePlayer> gamePlayers) {
-        return gamePlayerRepository
-                .findAll()
+        return gamePlayers
                 .stream()
                 .map(gamePlayer -> gamePlayer.toDTO())
                 .collect(Collectors.toList());
     }
 
     public List<Object> getShipsList(Set<Ship> ships) {
-        return shipRepository
-                .findAll()
+        return ships
                 .stream()
                 .map(ship -> ship.toDTO())
                 .collect(Collectors.toList());
@@ -71,8 +69,14 @@ public class SalvoController {
         );
         return dto;
     }
-    private Map<String, Object> leaderboard(Player player){
-        Map<String, Object> dto = player.LeaderboardDTO();
-        return dto;
+
+    @RequestMapping("/leaderboard")
+    public List<Map<String, Object>> getLeaderboard() {
+        return playerRepository.findAll()
+                .stream()
+                .map(player -> player.LeaderboardDTO())
+                .collect(Collectors.toList());
     }
+
+
 }

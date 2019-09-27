@@ -78,13 +78,13 @@ public class Player {
     }
     public Map<String, Object> LeaderboardDTO(){
         Map<String, Object> dto = new LinkedHashMap<>();
-        dto.put("Id", getId());
-        dto.put("Username", getUserName());
-        dto.put("Games", getScores().size());
-        dto.put("Total", getTotalScore());
-        dto.put("Wins", getWins().size());
-        dto.put("Ties", getTies().size());
-        dto.put("Losses", getLosses().size());
+        dto.put("id", this.getId());
+        dto.put("username", this.getUserName());
+        dto.put("games", this.getScores().size());
+        dto.put("total", this.getTotalScore());
+        dto.put("wins", this.getWins().size());
+        dto.put("ties", this.getTies().size());
+        dto.put("losses", this.getLosses().size());
         return dto;
     }
 }

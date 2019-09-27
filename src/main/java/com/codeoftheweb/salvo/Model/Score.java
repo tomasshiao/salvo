@@ -5,6 +5,8 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Entity
 public class Score {
@@ -53,6 +55,13 @@ public class Score {
 
     public double getScore() {
         return score;
+    }
+
+    public Map<String, Object> toDTO(){
+        Map<String, Object> dto = new LinkedHashMap<>();
+        dto.put("score", this.getScore());
+        dto.put("finishDate", this.getFinishedDate());
+        return dto;
     }
 
 }
