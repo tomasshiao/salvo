@@ -2,10 +2,13 @@ package com.codeoftheweb.salvo;
 
 import com.codeoftheweb.salvo.Model.*;
 import com.codeoftheweb.salvo.Repositories.*;
+import org.apache.catalina.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -32,10 +35,10 @@ public class SalvoApplication {
 									  ScoreRepository scoreRepository){
 		return(arg) -> {
 
-			Player player1 = new Player("j.bauer@ctu.gov");
-			Player player2 = new Player("c.obrian@ctu.gov");
-			Player player3 = new Player("kim_bauer@gmail.com");
-			Player player4 = new Player("t.almeida@ctu.gov");
+			Player player1 = new Player("j.bauer@ctu.gov", "24");
+			Player player2 = new Player("c.obrian@ctu.gov", "42");
+			Player player3 = new Player("kim_bauer@gmail.com", "kb");
+			Player player4 = new Player("t.almeida@ctu.gov", "mole");
 			playerRepository.save(player1);
 			playerRepository.save(player2);
 			playerRepository.save(player3);
@@ -109,22 +112,21 @@ public class SalvoApplication {
 
 }
 /*
-* @Configuration
-* class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter{
-* @Autowired
-* PlayerRepository playerRepository
-* @Override
-* public void init(AuthenticationManagerBuilder auth) throws Exception {
-* auth.userDetailsService(inputName ->{
-* Player player = playerRepository.findByUserName(inputName);
-* if(player != null){
-* return new User(player.getUserName(), player.getPassword),
-* AuthorityUtils.createAuthorityList("USER"));
-* }else{
-* throw new UsernameNotFoundException("unknown user: " + inputName);
-* }
-* }
-* }
-* }
-*
-* */
+ @Configuration
+ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter{
+ @Autowired
+ PlayerRepository playerRepository
+ @Override
+ public void init(AuthenticationManagerBuilder auth) throws Exception {
+ auth.userDetailsService(inputName ->{
+ Player player = playerRepository.findByUserName(inputName);
+ if(player != null){
+ return new User(player.getUserName(), player.getPassword()),
+ AuthorityUtils.createAuthorityList("USER");)
+ }else{
+ throw new UsernameNotFoundException("unknown user: " + inputName);
+ }
+ });
+ }
+}*/
+

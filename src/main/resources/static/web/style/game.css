@@ -9,3 +9,18 @@
 .salvo{
     background-color: crimson;
 }
+body{
+ background-image: url("https://wallpaperaccess.com/full/948963.jpg");
+}
+.container{
+color: white;
+}
+#tabla{
+    margin: 5%;
+    right: 5%;
+    color: gold;
+    left: 0%;
+}
+#tableTitle{
+font-size: 32px;
+}

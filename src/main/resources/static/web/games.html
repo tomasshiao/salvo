@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Salvo!</title>
+    <link rel="stylesheet" type="text/css" href="style/game.css">
+    <link rel="stylesheet" href="style/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+<div class="row text-center" id="tabla">
+    <table id="leaderboard" width="80%">
+        <tr><th colspan="6" class="text-center" id="tableTitle">Leaderboard</th></tr>
+        <tr><th>Player</th><th>Games</th><th>Total Score</th><th>Wins</th><th>Ties</th><th>Losses</th></tr>
+        <tr v-for="player in players">
+            <td>{{player.username}}</td>
+            <td>{{player.games}}</td>
+            <td>{{player.total}}</td>
+            <td>{{player.wins}}</td>
+            <td>{{player.ties}}</td>
+            <td>{{player.losses}}</td>
+        </tr>
+    </table>
+</div>
+</div>
+<script src="script/popper.min.js"></script>
+<script src="script/jquery-3.3.1.min.js"></script>
+<script src="script/bootstrap.min.js"></script>
+<script src="script/games.js"></script>
+</body>
+</html>

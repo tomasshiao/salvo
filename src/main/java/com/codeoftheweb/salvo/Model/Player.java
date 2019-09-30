@@ -25,15 +25,15 @@ public class Player {
     private Set<Score> scores = new LinkedHashSet<>();
 
 
-    //private String password
+    private String password;
 
 
     public Player() {
     }
 
-    public Player(String userName) {
+    public Player(String userName, String password) {
         this.userName = userName;
-        //this.password = password
+        this.password = password;
     }
 
     public Long getId() {
@@ -44,7 +44,7 @@ public class Player {
         return userName;
     }
 
-    //public String getPassword(){return password;}
+    public String getPassword(){return password;}
 
     public Set<GamePlayer> getGamePlayers() {
         return gamePlayers;

@@ -12,7 +12,6 @@ function getParameterByName(name) {
 function loadData() {
   $.get('/api/game_view/' + getParameterByName('id'))
     .done(function (game) {
-      console.log(game);
       var playerInfo;
       if (game.gamePlayers[0].id == getParameterByName('id'))
         playerInfo = [game.gamePlayers[0].player, game.gamePlayers[1].player];
@@ -61,4 +60,26 @@ function isHit(shipLocation,salvoes,playerId) {
   });
   return hit;
 }
+var leaderboard = new Vue({
+    el:"#leaderboard",
+    data:{
+    players: []
+    }
+})
 
+function getLeaderboard() {
+  $.get('/api/leaderboard')
+    .done(function (data) {
+    console.log(data);
+    var ranking = data.sort(function(a, b){
+    return b.total - a.total;
+    })
+    console.log(ranking);
+    leaderboard.players = ranking;
+    })
+    .fail(function (jqXHR, textStatus) {
+      alert('Failed: ' + textStatus);
+    });
+}
+
+getLeaderboard();
