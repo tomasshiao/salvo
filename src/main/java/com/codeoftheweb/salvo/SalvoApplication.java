@@ -2,14 +2,29 @@ package com.codeoftheweb.salvo;
 
 import com.codeoftheweb.salvo.Model.*;
 import com.codeoftheweb.salvo.Repositories.*;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.GlobalAuthenticationConfigurerAdapter;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.WebAttributes;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
@@ -22,10 +37,10 @@ public class SalvoApplication {
 		SpringApplication.run(SalvoApplication.class, args);
 	}
 
-	//@Bean
-	//public PasswordEncoder passwordEncoder(){
-	// return PasswordEncoderFactories.createDelegatingPasswordEncoders();
-	// }
+	@Bean
+	public PasswordEncoder passwordEncoder(){
+	return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+	 }
 	@Bean
 	public CommandLineRunner initData(PlayerRepository playerRepository,
 									  GameRepository gameRepository,
@@ -35,10 +50,10 @@ public class SalvoApplication {
 									  ScoreRepository scoreRepository){
 		return(arg) -> {
 
-			Player player1 = new Player("j.bauer@ctu.gov", "24");
-			Player player2 = new Player("c.obrian@ctu.gov", "42");
-			Player player3 = new Player("kim_bauer@gmail.com", "kb");
-			Player player4 = new Player("t.almeida@ctu.gov", "mole");
+			Player player1 = new Player("j.bauer@ctu.gov", passwordEncoder().encode("24"));
+			Player player2 = new Player("c.obrian@ctu.gov", passwordEncoder().encode("42") );
+			Player player3 = new Player("kim_bauer@gmail.com", passwordEncoder().encode("kb"));
+			Player player4 = new Player("t.almeida@ctu.gov", passwordEncoder().encode("mole"));
 			playerRepository.save(player1);
 			playerRepository.save(player2);
 			playerRepository.save(player3);
@@ -111,22 +126,69 @@ public class SalvoApplication {
 	}
 
 }
-/*
- @Configuration
- class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter{
- @Autowired
- PlayerRepository playerRepository
- @Override
- public void init(AuthenticationManagerBuilder auth) throws Exception {
- auth.userDetailsService(inputName ->{
- Player player = playerRepository.findByUserName(inputName);
- if(player != null){
- return new User(player.getUserName(), player.getPassword()),
- AuthorityUtils.createAuthorityList("USER");)
- }else{
- throw new UsernameNotFoundException("unknown user: " + inputName);
- }
- });
- }
-}*/
+
+
+@Configuration
+class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
+	@Autowired
+	PlayerRepository playerRepository;
+	@Autowired
+	PasswordEncoder passwordEncoder;
+	@Override
+	public void init(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(inputName ->{
+			Player player = playerRepository.findByUserName(inputName);
+			if(player != null){
+				return new User(player.getUserName(), player.getPassword(),
+				AuthorityUtils.createAuthorityList("USER"));
+			}else{
+				throw new UsernameNotFoundException("unknown user: " + inputName);
+			}
+		});
+	}
+}
+@EnableWebSecurity
+@Configuration
+class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+	protected void configure(HttpSecurity http) throws Exception {
+		http.authorizeRequests()
+				.antMatchers("/rest/**").hasAuthority("ADMIN")
+				.antMatchers("/api/game_view/*", "/api/logout").hasAuthority("USER")
+				.antMatchers("/api/leaderboard").permitAll()
+				.antMatchers("/api/login").permitAll()
+				.antMatchers("/api/games").permitAll()
+				.antMatchers("/web/game.html/**").permitAll()
+				.antMatchers("/web/css/**").permitAll()
+				.antMatchers("/web/js/**").permitAll()
+				.anyRequest().permitAll();
+		http.formLogin()
+				.usernameParameter("name")
+				.passwordParameter("pwd")
+				.loginPage("/app/login");
+
+		http.logout().logoutUrl("/app/logout");
+
+		// turn off checking for CSRF tokens
+		http.csrf().disable();
+
+		// if user is not authenticated, just send an authentication failure response
+		http.exceptionHandling().authenticationEntryPoint((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED));
+
+		// if login is successful, just clear the flags asking for authentication
+		http.formLogin().successHandler((req, res, auth) -> clearAuthenticationAttributes(req));
+
+		// if login fails, just send an authentication failure response
+		http.formLogin().failureHandler((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED));
+
+		// if logout is successful, just send a success response
+		http.logout().logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler());
+	}
+
+	private void clearAuthenticationAttributes(HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+		}
+	}
+}
 
