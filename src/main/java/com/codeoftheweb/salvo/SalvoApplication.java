@@ -161,12 +161,13 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/web/css/**").permitAll()
 				.antMatchers("/web/js/**").permitAll()
 				.anyRequest().permitAll();
+		// la "/*" entra en toda la carpeta, "/**" entra a las subcarpetas.
 		http.formLogin()
-				.usernameParameter("name")
-				.passwordParameter("pwd")
-				.loginPage("/app/login");
+				.usernameParameter("username")
+				.passwordParameter("password")
+				.loginPage("/api/login");
 
-		http.logout().logoutUrl("/app/logout");
+		http.logout().logoutUrl("/api/logout");
 
 		// turn off checking for CSRF tokens
 		http.csrf().disable();
