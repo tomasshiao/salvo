@@ -161,7 +161,6 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/web/css/**").permitAll()
 				.antMatchers("/web/js/**").permitAll()
 				.anyRequest().permitAll();
-		// la "/*" entra en toda la carpeta, "/**" entra a las subcarpetas.
 		http.formLogin()
 				.usernameParameter("username")
 				.passwordParameter("password")

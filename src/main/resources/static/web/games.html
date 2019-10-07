@@ -8,8 +8,19 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 <body>
+<div id="login" class="row" style="left:10%;">
+    <form id="login-form" onsubmit="return false">
+        <label>Name: <input type="text" name="username"></label>
+        <label>Password: <input type="password" name="password"></label>
+    </form>
+
+    <form id="logout-form" onsubmit="return false">
+        <button>Log out</button>
+    </form>
+</div>
+<div>
 <div class="row text-center" id="tabla">
-    <table id="leaderboard" width="80%">
+    <table id="leaderboard" width="100%">
         <tr><th colspan="6" class="text-center" id="tableTitle">Leaderboard</th></tr>
         <tr><th>Player</th><th>Games</th><th>Total Score</th><th>Wins</th><th>Ties</th><th>Losses</th></tr>
         <tr v-for="player in players">
