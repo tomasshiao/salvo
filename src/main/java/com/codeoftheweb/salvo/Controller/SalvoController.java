@@ -7,6 +7,8 @@ import com.codeoftheweb.salvo.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,15 +34,30 @@ public class SalvoController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @RequestMapping("/games")
-    public List<Object> getGamesList() {
-        return gameRepository
-                .findAll()
-                .stream()
-                .map(game -> game.toDTO())
-                .collect(Collectors.toList());
-    }
+    @Autowired
+    private Authentication authentication;
 
+    @RequestMapping("/games")
+    private boolean Guest(Authentication authentication) {
+        return authentication == null || authentication instanceof AnonymousAuthenticationToken;
+    }
+    public Map<String, Object> getGamesList() {
+        Map<String, Object> dto = new LinkedHashMap<>();
+        if (Guest(authentication)) {
+            Map<String, Object> guest = new LinkedHashMap<>();
+            guest.put("user", "guest");
+            dto.put("players", guest);
+        } else {
+            Player player = playerRepository.findByUserName(authentication.getName());
+            dto.put("players", player);
+            dto.put("games", gameRepository
+                    .findAll()
+                    .stream()
+                    .map(game -> game.toDTO())
+                    .collect(Collectors.toList()));
+        }
+        return dto;
+    } 
     public List<Object> getGamesPlayersList(Set<GamePlayer> gamePlayers) {
         return gamePlayers
                 .stream()
