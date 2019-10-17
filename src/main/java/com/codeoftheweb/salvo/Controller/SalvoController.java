@@ -100,7 +100,7 @@ public class SalvoController {
     }
 
     @RequestMapping(path = "/players", method = RequestMethod.POST)
-    public ResponseEntity<Object> register(
+    public ResponseEntity<String> register(
             @RequestParam String userName, @RequestParam String password) {
 
         if (userName.isEmpty() || password.isEmpty()) {

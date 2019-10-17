@@ -22,18 +22,24 @@ function getLeaderboard() {
 
 getLeaderboard();
 
-function login(evt) {
-  evt.preventDefault();
-  var form = evt.target.form;
+var login = new Vue({
+    el:"#login",
+    data:{
+        currentUser: ""
+    }
+})
+function login() {
+  var form = document.getElementById("login-form");
   $.post("/app/login",
          { name: form["username"].value,
-           pwd: form["password"].value })
-   .done(function() { console.log("logged in!");})
+           password: form["password"].value })
+   .done(function(data) {
+   login.currentUser = data.name;
+   })
    .fail(function(){console.log("Username and/or password invalid");});
 }
 
-function logout(evt) {
-  evt.preventDefault();
+function logout() {
   $.post("/app/logout")
    .done(function() { console.log("logged out"); })
    .fail(function() { console.log("Unable to log out"); });
