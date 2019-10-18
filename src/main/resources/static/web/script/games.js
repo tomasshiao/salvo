@@ -28,19 +28,33 @@ var login = new Vue({
         currentUser: ""
     }
 })
-function login() {
-  var form = document.getElementById("login-form");
-  $.post("/app/login",
-         { name: form["username"].value,
-           password: form["password"].value })
-   .done(function(data) {
-   login.currentUser = data.name;
-   })
-   .fail(function(){console.log("Username and/or password invalid");});
-}
+$('#login-form').on('submit', function (event) {
+    event.preventDefault();
+    if (submitButton == "login") {
+        $.post("/api/login",
+            { username: $("#username").val(),
+                password: $("#password").val() })
+            .done(function() {
+                console.log("login ok");
+                $('#loginSuccess').show( "slow" ).delay(2000).hide( "slow" );
+                // $("#username").val("");
+                $("#password").val("");
+                updateJson();
+            })
+            .fail(function() {
+                console.log("login failed");
+                $('#loginFailed').show( "slow" ).delay(2000).hide( "slow" );
+                $("#username").val("");
+                $("#password").val("");
+                $("#username").focus();
+                // $('#loginFailed').hide( "slow" );
+            })
+            .always(function() {
+            });
+    }
 
-function logout() {
-  $.post("/app/logout")
-   .done(function() { console.log("logged out"); })
-   .fail(function() { console.log("Unable to log out"); });
-}
+ $(function() {
+     $('.submitbutton').click(function () {
+         submitButton = $(this).attr('name')
+     });
+ });
