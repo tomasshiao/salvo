@@ -8,16 +8,19 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 <body>
-<form id="login-form" onsubmit="return false">
-    <label>Name: <input type="text" name="username"></label>
-    <label>Password: <input type="text" name="password"></label>
-    <button>Log In</button>
+<form class="form-inline" id="login-form" onsubmit="return false">
+    <label for="username">Name: </label><input class="form-control" id="username"type="email" name="username" required>
+    <label for="password">Password: </label><input class="form-control" id="password"type="password" name="password" required>
+    <br>
+    <input type="submit" class="form-contro  submitbutton btn btn-info" name="login" value="Login">
+    <input type="button" class="form-contro  sign-up-button btn btn-info" name="singup" value="Sign Up">
 </form>
 
+
 <div>
-<div class="row text-center" id="tabla">
-    <table id="leaderboard" class=""table" width="100%">
-        <tr><th colspan="6" class="text-center" id="tableTitle">Leaderboard</th></tr>
+<div class="row text-center" id="tablaL">
+    <table id="leaderboard" class="table" width="100%">
+        <tr><th colspan="6" class="text-center tableTitle">Leaderboard</th></tr>
         <tr><th>Player</th><th>Games</th><th>Total Score</th><th>Wins</th><th>Ties</th><th>Losses</th></tr>
         <tr v-for="player in players">
             <td>{{player.username}}</td>
@@ -29,6 +32,19 @@
         </tr>
     </table>
 </div>
+    <div class="row text-center" id="tablaG">
+        <table id="tableGames" class="table" width="100%">
+            <tr><th colspan="5" class="text-center tableTitle">Games</th> </tr>
+            <tr><th>Player 1</th><th></th><th>Player 2</th><th></th><th></th></tr>
+            <tr v-for="x in gamesList">
+                <td>{{x.gamePlayers[0].player.email}}</td>
+                <td>vs.</td>
+                <td>{{x.gamePlayers[0].player.email}}</td>
+                <td><button class="btn btn-info">Enter</button></td>
+                <td><button class="btn btn-info">Join Game</button></td>
+            </tr>
+        </table>
+    </div>
 </div>
 <script src="script/popper.min.js"></script>
 <script src="script/jquery-3.3.1.min.js"></script>

@@ -34,14 +34,14 @@ public class SalvoController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private boolean Guest(Authentication authentication) {
+    private boolean isGuest(Authentication authentication) {
         return authentication == null || authentication instanceof AnonymousAuthenticationToken;
     }
 
     @RequestMapping("/games")
     public Map<String, Object> getGamesList(Authentication authentication) {
         Map<String, Object> dto = new LinkedHashMap<>();
-        if (Guest(authentication)) {
+        if (isGuest(authentication)) {
             Map<String, Object> guest = new LinkedHashMap<>();
             guest.put("user", "guest");
             dto.put("players", guest);
