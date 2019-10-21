@@ -41,21 +41,20 @@ public class SalvoController {
     @RequestMapping("/games")
     public Map<String, Object> getGamesList(Authentication authentication) {
         Map<String, Object> dto = new LinkedHashMap<>();
-        if (isGuest(authentication)) {
-            Map<String, Object> guest = new LinkedHashMap<>();
-            guest.put("user", "guest");
-            dto.put("players", guest);
-        } else {
+        if (!isGuest(authentication)) {
             Player player = playerRepository.findByUserName(authentication.getName());
-            dto.put("players", player);
-            dto.put("games", gameRepository
-                    .findAll()
-                    .stream()
-                    .map(game -> game.toDTO())
-                    .collect(Collectors.toList()));
+            dto.put("players", player.toDTO());
         }
+
+        dto.put("games", gameRepository
+                .findAll()
+                .stream()
+                .map(game -> game.toDTO())
+                .collect(Collectors.toList()));
+
         return dto;
-    } 
+    }
+
     public List<Object> getGamesPlayersList(Set<GamePlayer> gamePlayers) {
         return gamePlayers
                 .stream()

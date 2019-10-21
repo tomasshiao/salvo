@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Salvo!</title>
-    <link rel="stylesheet" type="text/css" href="style/game.css">
     <link rel="stylesheet" href="style/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="style/game.css">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 <body>
+<div id="formularioLogIn">
 <form class="form-inline" id="login-form" onsubmit="return false">
     <label for="username">Name: </label><input class="form-control" id="username"type="email" name="username" required>
     <label for="password">Password: </label><input class="form-control" id="password"type="password" name="password" required>
@@ -15,33 +16,38 @@
     <input type="submit" class="form-contro  submitbutton btn btn-info" name="login" value="Login">
     <input type="button" class="form-contro  sign-up-button btn btn-info" name="singup" value="Sign Up">
 </form>
+</div>
+<div id="logOut" class="row">
+    <button class="btn btn-danger">Log out</button>
+    <p id="playerLoggueado"></p>
+</div>
 
 
 <div>
 <div class="row text-center" id="tablaL">
     <table id="leaderboard" class="table" width="100%">
-        <tr><th colspan="6" class="text-center tableTitle">Leaderboard</th></tr>
-        <tr><th>Player</th><th>Games</th><th>Total Score</th><th>Wins</th><th>Ties</th><th>Losses</th></tr>
+        <tr><th colspan="6" class="text-center tableTitle"><span class="tableText">Leaderboard</span></th></tr>
+        <tr><th><span class="tableText">Player</span></th><th><span class="tableText">Games</span></th><th><span class="tableText">Total Score</span></th><th><span class="tableText">Wins</span></th><th><span class="tableText">Ties</span></th><th><span class="tableText">Losses</span></th></tr>
         <tr v-for="player in players">
-            <td>{{player.username}}</td>
-            <td>{{player.games}}</td>
-            <td>{{player.total}}</td>
-            <td>{{player.wins}}</td>
-            <td>{{player.ties}}</td>
-            <td>{{player.losses}}</td>
+            <td><span class="tableText">{{player.username}}</span></td>
+            <td><span class="tableText">{{player.games}}</span></td>
+            <td><span class="tableText">{{player.total}}</span></td>
+            <td><span class="tableText">{{player.wins}}</span></td>
+            <td><span class="tableText">{{player.ties}}</span></td>
+            <td><span class="tableText">{{player.losses}}</span></td>
         </tr>
     </table>
 </div>
     <div class="row text-center" id="tablaG">
         <table id="tableGames" class="table" width="100%">
-            <tr><th colspan="5" class="text-center tableTitle">Games</th> </tr>
-            <tr><th>Player 1</th><th></th><th>Player 2</th><th></th><th></th></tr>
+            <tr><th colspan="5" class="text-center tableTitle"><span class="tableText">Games</span></th> </tr>
+            <tr><th><span class="tableText">Player 1</span></th><th></th><th><span class="tableText">Player 2</span></th><th></th><th></th></tr>
             <tr v-for="x in gamesList">
-                <td>{{x.gamePlayers[0].player.email}}</td>
-                <td>vs.</td>
-                <td>{{x.gamePlayers[0].player.email}}</td>
-                <td><button class="btn btn-info">Enter</button></td>
-                <td><button class="btn btn-info">Join Game</button></td>
+                <td><span class="tableText">{{x.gamePlayers[0].player.email}}</span></td>
+                <td><span class="tableText">vs.</span></td>
+                <td><span class="tableText">{{x.gamePlayers[1].player.email}}</span></td>
+                <td><button class="btn btn-success">Enter</button></td>
+                <td><button class="btn btn-warning">Join Game</button></td>
             </tr>
         </table>
     </div>

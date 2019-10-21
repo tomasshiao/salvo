@@ -26,27 +26,45 @@ var gameList = new Vue({
     el:"#tableGames",
     data:{
     gamesList: []
-    }
+    }    .done(function(data){
+         console
 })
 
 function getGames(){
  $.get('/api/games')
-    .done(function(data){
-    console.log(data);
+.log(data);
     var games = data.games;
     console.log(games);
     gameList.gamesList = games;
     })
 }
 getGames();
+
+function redirigir(){
+$.get("/api/games")
+    .done(function(data){
+    var player = data.players.email;
+    if(player == null){
+    $("#formularioLogIn").show();
+    $("#logOut").hide();
+    } else {
+    $("#formularioLogIn").hide();
+    $("#logOut").show();
+    $("#playerLoggueado").text("User: " + player);
+    }
+ })
+ }
+
 $(function() {
     $('.submitbutton').click(function () {
         submitButton = $(this).attr('name')
     });
     $(".sign-up-button").click(function(){
-        var username = $("#username").val();
-        var password = $("#password").val();
-        $.post("/api/players", {userName:  username, password: password})
+        var request = {
+         username: $("#username").val(),
+         password: $("#password").val()
+         };
+        $.post("/api/players", request)
         .done(function(){
             alert("Success");
         })
@@ -58,16 +76,18 @@ $(function() {
 $('#login-form').on('submit', function (event) {
     event.preventDefault();
     if (submitButton == "login") {
-        $.post("/api/login",
-            { username: $("#username").val(),
-                password: $("#password").val() })
+     var request = {
+             username: $("#username").val(),
+             password: $("#password").val()
+             };
+        $.post("/api/login", request)
             .done(function() {
              alert("Success");
                 console.log("login ok");
                 $('#loginSuccess').show( "slow" ).delay(2000).hide( "slow" );
-                // $("#username").val("");
+                $("#username").val("");
                 $("#password").val("");
-                //updateJson();
+                redirigir();
             })
             .fail(function() {
                 console.log("login failed");
@@ -78,7 +98,5 @@ $('#login-form').on('submit', function (event) {
                 $("#username").focus();
                 // $('#loginFailed').hide( "slow" );
             })
-            .always(function() {
-            });
     }
 });

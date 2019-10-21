@@ -24,3 +24,12 @@ color: white;
 .tableTitle{
 font-size: 32px;
 }
+.btn-info {
+    margin-left: 10px;
+}
+#formularioLogIn{
+display: block;
+}
+#logOut{
+display: none;
+}
