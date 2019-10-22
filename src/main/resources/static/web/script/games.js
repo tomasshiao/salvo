@@ -26,13 +26,13 @@ var gameList = new Vue({
     el:"#tableGames",
     data:{
     gamesList: []
-    }    .done(function(data){
-         console
-})
+    }
+    })
 
 function getGames(){
  $.get('/api/games')
-.log(data);
+.done(function(data){
+    console.log(data);
     var games = data.games;
     console.log(games);
     gameList.gamesList = games;
@@ -60,10 +60,10 @@ $(function() {
         submitButton = $(this).attr('name')
     });
     $(".sign-up-button").click(function(){
-        var request = {
-         username: $("#username").val(),
-         password: $("#password").val()
-         };
+    var request = {
+                 username: $("#username").val(),
+                 password: $("#password").val()
+                 };
         $.post("/api/players", request)
         .done(function(){
             alert("Success");
@@ -76,10 +76,10 @@ $(function() {
 $('#login-form').on('submit', function (event) {
     event.preventDefault();
     if (submitButton == "login") {
-     var request = {
-             username: $("#username").val(),
-             password: $("#password").val()
-             };
+    var request = {
+                 username: $("#username").val(),
+                 password: $("#password").val()
+                 };
         $.post("/api/login", request)
             .done(function() {
              alert("Success");
@@ -98,5 +98,7 @@ $('#login-form').on('submit', function (event) {
                 $("#username").focus();
                 // $('#loginFailed').hide( "slow" );
             })
+    } else if(submitButton == "logout"){
+    redirigir();
     }
 });
