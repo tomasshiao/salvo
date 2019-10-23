@@ -9,19 +9,19 @@
 </head>
 <body>
 
+<div id="formularioLogIn">
 <form class="form-inline" id="login-form" onsubmit="return false">
-    <div id="formularioLogIn">
     <label for="username">Name: </label><input class="form-control" id="username" type="email" name="username" required>
     <label for="password">Password: </label><input class="form-control" id="password" type="password" name="password" required>
     <br>
     <input type="submit" class="form-contro  submitbutton btn btn-info" name="login" value="Login">
     <input type="button" class="form-contro  sign-up-button btn btn-info" name="singup" value="Sign Up">
-    </div>
-    <div id="logOut" class="row">
-        <input type="submit" class="form-contro submitbutton btn btn-danger" name="logout" value="Log Out">
-        <p id="playerLoggueado"></p>
-    </div>
 </form>
+</div>
+<div id="logOut" class="row">
+    <button class="btn btn-danger" onclick="logout()">Log Out</button>
+    <p id="playerLoggueado"></p>
+</div>
 
 <div>
 <div class="row text-center" id="tablaL">

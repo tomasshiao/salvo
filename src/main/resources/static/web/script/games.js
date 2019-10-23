@@ -40,7 +40,7 @@ function getGames(){
 }
 getGames();
 
-function redirigir(){
+/*function redirigir(){
 $.get("/api/games")
     .done(function(data){
     var player = data.players.email;
@@ -53,7 +53,7 @@ $.get("/api/games")
     $("#playerLoggueado").text("User: " + player);
     }
  })
- }
+ }*/
 
 $(function() {
     $('.submitbutton').click(function () {
@@ -87,7 +87,13 @@ $('#login-form').on('submit', function (event) {
                 $('#loginSuccess').show( "slow" ).delay(2000).hide( "slow" );
                 $("#username").val("");
                 $("#password").val("");
-                redirigir();
+                $.get("/api/games")
+                    .done(function(data){
+                    var player = data.players.email;
+                    $("#formularioLogIn").hide();
+                    $("#logOut").show();
+                    $("#playerLoggueado").text("User: " + player);
+                    })
             })
             .fail(function() {
                 console.log("login failed");
@@ -98,7 +104,15 @@ $('#login-form').on('submit', function (event) {
                 $("#username").focus();
                 // $('#loginFailed').hide( "slow" );
             })
-    } else if(submitButton == "logout"){
-    redirigir();
     }
 });
+function logout(){
+          $.post("/api/logout")
+              .done(function(){
+              alert("Logged out");
+              $("#formularioLogIn").show();
+              $("#logOut").hide();
+             // $("#username").val("");
+             // $("#password").val("");
+              })
+      }
