@@ -40,21 +40,6 @@ function getGames(){
 }
 getGames();
 
-/*function redirigir(){
-$.get("/api/games")
-    .done(function(data){
-    var player = data.players.email;
-    if(player == null){
-    $("#formularioLogIn").show();
-    $("#logOut").hide();
-    } else {
-    $("#formularioLogIn").hide();
-    $("#logOut").show();
-    $("#playerLoggueado").text("User: " + player);
-    }
- })
- }*/
-
 $(function() {
     $('.submitbutton').click(function () {
         submitButton = $(this).attr('name')
@@ -102,7 +87,6 @@ $('#login-form').on('submit', function (event) {
                 $("#username").val("");
                 $("#password").val("");
                 $("#username").focus();
-                // $('#loginFailed').hide( "slow" );
             })
     }
 });
@@ -112,7 +96,5 @@ function logout(){
               alert("Logged out");
               $("#formularioLogIn").show();
               $("#logOut").hide();
-             // $("#username").val("");
-             // $("#password").val("");
               })
       }

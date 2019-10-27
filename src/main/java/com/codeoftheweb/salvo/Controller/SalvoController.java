@@ -104,11 +104,12 @@ public class SalvoController {
             return new ResponseEntity<>("Missing data", HttpStatus.FORBIDDEN);
         }
 
-        if (playerRepository.findByUserName(userName) !=  null) {
+        if (playerRepository.findByUserName(userName) != null) {
             return new ResponseEntity<>("Name already in use", HttpStatus.FORBIDDEN);
         }
 
         playerRepository.save(new Player(userName, passwordEncoder.encode(password)));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+    
 }
