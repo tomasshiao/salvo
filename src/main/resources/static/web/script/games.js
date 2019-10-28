@@ -16,7 +16,7 @@ function getLeaderboard() {
     leaderboard.players = ranking;
     })
     .fail(function (jqXHR, textStatus) {
-      alert('Failed: ' + textStatus);
+      swal('Failed: ' + textStatus);
     });
 }
 
@@ -66,10 +66,10 @@ $(function() {
                  };
         $.post("/api/players", request)
         .done(function(){
-            alert("Success");
+            swal("Success");
         })
         .fail(function(){
-            alert("Error");
+            swal("Error");
         })
     })
 });
@@ -82,7 +82,7 @@ $('#login-form').on('submit', function (event) {
                  };
         $.post("/api/login", request)
             .done(function() {
-             alert("Success");
+             swal("Success");
                 console.log("login ok");
                 $('#loginSuccess').show( "slow" ).delay(2000).hide( "slow" );
                 $("#username").val("");
@@ -97,7 +97,7 @@ $('#login-form').on('submit', function (event) {
             })
             .fail(function() {
                 console.log("login failed");
-                alert("Error");
+                swal("Error");
                 $('#loginFailed').show( "slow" ).delay(2000).hide( "slow" );
                 $("#username").val("");
                 $("#password").val("");
@@ -109,7 +109,7 @@ $('#login-form').on('submit', function (event) {
 function logout(){
           $.post("/api/logout")
               .done(function(){
-              alert("Logged out");
+              swal("Logged out");
               $("#formularioLogIn").show();
               $("#logOut").hide();
              // $("#username").val("");
