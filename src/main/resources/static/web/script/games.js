@@ -42,22 +42,22 @@ getGames();
 
 $(function() {
     $('.submitbutton').click(function () {
-        submitButton = $(this).attr('name')
+       let submitButton = $(this).attr('name')
     });
-    $(".sign-up-button").click(function(){
+    $(".sign-up-button").on('submit', function(){
     var request = {
-                 username: $("#username").val(),
+                 userName: $("#username").val(),
                  password: $("#password").val()
                  };
         $.post("/api/players", request)
-        .done(function(){
-            swal("Success");
-        })
-        .fail(function(){
-            swal("Error");
-        })
+            .done(function(){
+                location.reload();
+            })
+            .fail(function(){
+                swal("Error");
+            })
     })
-});
+
 $('#login-form').on('submit', function (event) {
     event.preventDefault();
     if (submitButton == "login") {
@@ -89,6 +89,7 @@ $('#login-form').on('submit', function (event) {
                 $("#username").focus();
             })
     }
+});
 });
 function logout(){
           $.post("/api/logout")

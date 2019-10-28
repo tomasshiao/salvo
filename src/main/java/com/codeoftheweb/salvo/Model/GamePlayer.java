@@ -61,7 +61,7 @@ public class GamePlayer {
 
     public Map<String, Object> toDTO(){
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
-        dto.put("id", this.getId());
+        dto.put("gpid", this.getId());
         dto.put("player", this.getPlayer().toDTO());
         dto.put("joinTime", this.getJoinTime());
         return dto;

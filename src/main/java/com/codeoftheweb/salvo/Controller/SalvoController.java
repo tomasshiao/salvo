@@ -1,5 +1,6 @@
 package com.codeoftheweb.salvo.Controller;
 
+import com.codeoftheweb.salvo.Model.Game;
 import com.codeoftheweb.salvo.Model.GamePlayer;
 import com.codeoftheweb.salvo.Model.Player;
 import com.codeoftheweb.salvo.Model.Ship;
@@ -69,6 +70,11 @@ public class SalvoController {
                 .collect(Collectors.toList());
     }
 
+    public Map<String,Object> MakeMap (String key, Object value){
+        Map<String, Object> mapaCreado = new LinkedHashMap<>();
+        mapaCreado.put (key, value);
+        return mapaCreado;
+    }
 
     @RequestMapping("/game_view/{id}")
     public Map<String, Object> getGameView(@PathVariable Long id) {
@@ -107,9 +113,29 @@ public class SalvoController {
         if (playerRepository.findByUserName(userName) != null) {
             return new ResponseEntity<>("Name already in use", HttpStatus.FORBIDDEN);
         }
-
         playerRepository.save(new Player(userName, passwordEncoder.encode(password)));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-    
+    @RequestMapping(path="/games", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>>createGame(Authentication authentication){
+        if(isGuest(authentication)){
+            return new ResponseEntity<>(MakeMap("error", "No player logged in"), HttpStatus.FORBIDDEN);
+        } else {
+            Game game = gameRepository.save(new Game());
+            Player player = playerRepository.findByUserName(authentication.getName());
+            GamePlayer gamePlayer = gamePlayerRepository.save(new GamePlayer(player, game));
+            return new ResponseEntity<>(MakeMap("gpid", gamePlayer.getId()), HttpStatus.CREATED);
+        }
+    }
+    /*@RequestMapping(path = "/games/{id}/players")
+    public ResponseEntity<Map<String, Object>>joinGame(@RequestParam Long id, Authentication authentication){
+        Game game = gameRepository.findById(id).orElse(null);
+        Player player = playerRepository.findByUserName(authentication.getName());
+        if(game == null){
+            return new ResponseEntity<>(MakeMap("error", "Game does not exist"), HttpStatus.FORBIDDEN);
+        }
+        if(isGuest(authentication)){
+            return new ResponseEntity<>(MakeMap("error", "No player logged in"), HttpStatus.FORBIDDEN);
+        }
+        if()*/
 }
