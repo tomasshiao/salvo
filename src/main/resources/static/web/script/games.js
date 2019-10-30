@@ -41,26 +41,16 @@ function getGames(){
 getGames();
 
 $(function() {
-    $('.submitbutton').click(function () {
-       let submitButton = $(this).attr('name')
+    $('.log-in-button').click(function () {
+       button = $(this).attr('name')
     });
-    $(".sign-up-button").on('submit', function(){
-    var request = {
-                 userName: $("#username").val(),
-                 password: $("#password").val()
-                 };
-        $.post("/api/players", request)
-            .done(function(){
-                location.reload();
-            })
-            .fail(function(){
-                swal("Error");
-            })
-    })
+    $(".sign-up-button").click(function () {
+       button = $(this).attr('name')
+    });
 
 $('#login-form').on('submit', function (event) {
     event.preventDefault();
-    if (submitButton == "login") {
+    if (button == "login") {
     var request = {
                  username: $("#username").val(),
                  password: $("#password").val()
@@ -88,6 +78,19 @@ $('#login-form').on('submit', function (event) {
                 $("#password").val("");
                 $("#username").focus();
             })
+    } else if(button == "signup"){
+      var request = {
+                     userName: $("#username").val(),
+                     password: $("#password").val()
+                     };
+            $.post("/api/players", request)
+                .done(function(){
+                    location.reload();
+                    swal("Success!");
+                })
+                .fail(function(){
+                    swal("Error");
+                })
     }
 });
 });
@@ -98,4 +101,4 @@ function logout(){
               $("#formularioLogIn").show();
               $("#logOut").hide();
               })
-      }
+}
