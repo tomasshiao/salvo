@@ -102,3 +102,18 @@ function logout(){
               $("#logOut").hide();
               })
 }
+
+/*var app = new Vue({
+    el:"#app",
+    data:{
+        players: [],
+        games:[],
+        user: ""
+    },
+    methods:{
+        joinGame()
+    },
+    created: function(){
+        getGames()
+    }
+})*/

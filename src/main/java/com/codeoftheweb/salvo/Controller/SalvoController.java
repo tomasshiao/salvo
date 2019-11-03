@@ -107,11 +107,11 @@ public class SalvoController {
             @RequestParam String userName, @RequestParam String password) {
 
         if (userName.isEmpty() || password.isEmpty()) {
-            return new ResponseEntity<>("Missing data", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("There're 2 (two) inputs for you to complete. Please and thank you.", HttpStatus.FORBIDDEN);
         }
 
         if (playerRepository.findByUserName(userName) != null) {
-            return new ResponseEntity<>("Name already in use", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("Be original! This name's taken.", HttpStatus.FORBIDDEN);
         }
         playerRepository.save(new Player(userName, passwordEncoder.encode(password)));
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -119,7 +119,7 @@ public class SalvoController {
     @RequestMapping(path="/games", method = RequestMethod.POST)
     public ResponseEntity<Map<String, Object>>createGame(Authentication authentication){
         if(isGuest(authentication)){
-            return new ResponseEntity<>(MakeMap("error", "No player logged in"), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(MakeMap("error", "Hello, stranger. We seek identification, so we need you to log in or sign up, please."), HttpStatus.FORBIDDEN);
         } else {
             Game game = gameRepository.save(new Game());
             Player player = playerRepository.findByUserName(authentication.getName());
@@ -130,19 +130,26 @@ public class SalvoController {
     @RequestMapping(path = "/games/{id}/players")
     public ResponseEntity<Map<String, Object>>joinGame(@RequestParam Long id, Authentication authentication){
         Game game = gameRepository.findById(id).orElse(null);
-        Player player = playerRepository.findByUserName(authentication.getName());
         if(game == null){
-            return new ResponseEntity<>(MakeMap("error", "Game does not exist."), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(MakeMap("error", "This game is like air resistance to physics teachers. Inexistent."), HttpStatus.FORBIDDEN);
         }
         if(isGuest(authentication)){
-            return new ResponseEntity<>(MakeMap("error", "No player logged in."), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(MakeMap("error", "Who're you? It appears you're not logged in."), HttpStatus.FORBIDDEN);
         }
         if(game.getGamePlayers().size() == 2){
-            return new ResponseEntity<>(MakeMap("error", "Game's already full."), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(MakeMap("error", "Too late. Be quicker next time. Game's already full."), HttpStatus.FORBIDDEN);
         }
         if(game.getGamePlayers().stream().map(gamePlayer -> gamePlayer.getPlayer().getUserName()).collect(Collectors.toList()).contains(authentication.getName())){
-            return new ResponseEntity<>(MakeMap("error", "You can't play against yourself."), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(MakeMap("error", "Raise above others or get razed, you can't get both unless you have another account."), HttpStatus.FORBIDDEN);
         }
         return new ResponseEntity<>(MakeMap("success", "You're in. Good Luck."), HttpStatus.CREATED);
-}
+    }
+    @RequestMapping(path = "/games/{id}/players")
+    public ResponseEntity<Map<String, Object>> returnToGame(@RequestParam Long id, Authentication authentication){
+        Game game = gameRepository.findById(id).orElse(null);
+        if (game.getGamePlayers().stream().map(gamePlayer -> gamePlayer.getPlayer().getUserName()).collect(Collectors.toList()).contains(authentication)){
+            return new ResponseEntity<>(MakeMap("success", "Back on track."), HttpStatus.ACCEPTED);
+        }
+        return new ResponseEntity<>(MakeMap("error", "You're not playing this game, spectator. Mind your own business."), HttpStatus.FORBIDDEN);
+    }
 }
