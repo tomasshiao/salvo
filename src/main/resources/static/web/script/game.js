@@ -20,10 +20,10 @@ function loadData() {
 
       game.ships.forEach(function (shipPiece) {
         shipPiece.locations.forEach(function (shipLocation) {
-          let turnHitted = isHit(shipLocation,game.salvoes,playerInfo[0].id)
-          if(turnHitted >0){
-            $('#B_' + shipLocation).addClass('ship-piece-hited');
-            $('#B_' + shipLocation).text(turnHitted);
+          let turnHit = isHit(shipLocation,game.salvoes,playerInfo[0].id)
+          if(turnHit >0){
+            $('#B_' + shipLocation).addClass('ship-piece-hit');
+            $('#B_' + shipLocation).text(turnHit);
           }
           else
             $('#B_' + shipLocation).addClass('ship-piece');

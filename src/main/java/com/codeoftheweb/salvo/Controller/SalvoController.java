@@ -44,7 +44,9 @@ public class SalvoController {
         Map<String, Object> dto = new LinkedHashMap<>();
         if (!isGuest(authentication)) {
             Player player = playerRepository.findByUserName(authentication.getName());
-            dto.put("players", player.toDTO());
+            dto.put("player", player.toDTO());
+        } else {
+            dto.put("player", "Guest");
         }
 
         dto.put("games", gameRepository
@@ -107,11 +109,11 @@ public class SalvoController {
             @RequestParam String userName, @RequestParam String password) {
 
         if (userName.isEmpty() || password.isEmpty()) {
-            return new ResponseEntity<>("Missing data", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("Well, well, well, it appears there're 2 (TWO) inputs to fill in. Please and thank you.", HttpStatus.FORBIDDEN);
         }
 
         if (playerRepository.findByUserName(userName) != null) {
-            return new ResponseEntity<>("Name already in use", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("Be (even more) original! This username's already taken!", HttpStatus.FORBIDDEN);
         }
         playerRepository.save(new Player(userName, passwordEncoder.encode(password)));
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -119,7 +121,7 @@ public class SalvoController {
     @RequestMapping(path="/games", method = RequestMethod.POST)
     public ResponseEntity<Map<String, Object>>createGame(Authentication authentication){
         if(isGuest(authentication)){
-            return new ResponseEntity<>(MakeMap("error", "No player logged in"), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(MakeMap("error", "Hey, who's this? We need to identify you to pair you up."), HttpStatus.FORBIDDEN);
         } else {
             Game game = gameRepository.save(new Game());
             Player player = playerRepository.findByUserName(authentication.getName());
@@ -132,17 +134,20 @@ public class SalvoController {
         Game game = gameRepository.findById(id).orElse(null);
         Player player = playerRepository.findByUserName(authentication.getName());
         if(game == null){
-            return new ResponseEntity<>(MakeMap("error", "Game does not exist."), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(MakeMap("error", "This game is like air resistance to physics teachers. Inexistent."), HttpStatus.FORBIDDEN);
         }
         if(isGuest(authentication)){
-            return new ResponseEntity<>(MakeMap("error", "No player logged in."), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(MakeMap("error", "Who're you? We'll need your ID to let you in."), HttpStatus.FORBIDDEN);
         }
         if(game.getGamePlayers().size() == 2){
-            return new ResponseEntity<>(MakeMap("error", "Game's already full."), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(MakeMap("error", "Too late. A few moments too late. Only two can play this game."), HttpStatus.FORBIDDEN);
         }
         if(game.getGamePlayers().stream().map(gamePlayer -> gamePlayer.getPlayer().getUserName()).collect(Collectors.toList()).contains(authentication.getName())){
-            return new ResponseEntity<>(MakeMap("error", "You can't play against yourself."), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(MakeMap("error", "Either raise or get razed. You'll need to use another account if you want both in the same game."), HttpStatus.FORBIDDEN);
         }
-        return new ResponseEntity<>(MakeMap("success", "You're in. Good Luck."), HttpStatus.CREATED);
+        GamePlayer gamePlayer = new GamePlayer(player, game);
+        gamePlayerRepository.save(gamePlayer);
+
+        return new ResponseEntity<>(MakeMap("gpid", gamePlayer.getId()), HttpStatus.CREATED);
 }
 }
