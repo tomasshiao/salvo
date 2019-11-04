@@ -8,49 +8,64 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 <body>
-
-<div id="formularioLogIn">
-<form class="form-inline" id="login-form" onsubmit="return false">
-    <label for="username">Name: </label><input class="form-control" id="username" type="email" name="username" required>
-    <label for="password">Password: </label><input class="form-control" id="password" type="password" name="password" required>
-    <br>
-    <input type="button" class="form-contro  log-in-button btn btn-info" name="login" value="Login">
-    <input type="submit" class="form-contro  sign-up-button btn btn-info" name="signup" value="Sign Up">
-</form>
+<div id="app">
+    <div v-show="user == 'Guest'">
+        <div id="formularioLogIn">
+            <form class="form-inline" id="login-form" onsubmit="return false">
+                <label for="username">Name: </label><input class="form-control" id="username" type="email" name="username" required>
+                <label for="password">Password: </label><input class="form-control" id="password" type="password" name="password" required>
+                <br>
+                <input type="button" class="form-contro  log-in-button btn btn-info" @click="login()" value="Log in">
+                <input type="submit" class="form-contro  sign-up-button btn btn-info" @click="signup()" value="Sign Up">
+            </form>
+        </div>
+    </div>
+<div v-show="user != 'Guest'">
+    <div id="logOut" class="row">
+        <input type="button" class="btn btn-danger"  @click="logout()" value="Log out">
+        <h3 class="col col-6">Bonjour, <span id="playerLoggueado">{{user.email}}</span>!</h3>
+        <input type="button" class="btn btn-warning"  @click="createGame()" value="Create Game">
+    </div>
 </div>
-<div id="logOut" class="row">
-    <button type="button" class="btn btn-danger" onclick="logout()" class="col col-3">Log Out</button>
-    <p id="playerLoggueado" class="col col-6"></p>
-    <button type="button" class="btn btn-warning" class="col col-3">Create Game</button>
-</div>
-
-<div>
-<div class="row text-center" id="tablaL">
-    <table id="leaderboard" class="table" width="100%">
-        <tr><th colspan="6" class="text-center tableTitle"><span class="tableText">Leaderboard</span></th></tr>
-        <tr><th><span class="tableText">Player</span></th><th><span class="tableText">Games</span></th><th><span class="tableText">Total Score</span></th><th><span class="tableText">Wins</span></th><th><span class="tableText">Ties</span></th><th><span class="tableText">Losses</span></th></tr>
-        <tr v-for="player in players">
-            <td><span class="tableText">{{player.username}}</span></td>
-            <td><span class="tableText">{{player.games}}</span></td>
-            <td><span class="tableText">{{player.total}}</span></td>
-            <td><span class="tableText">{{player.wins}}</span></td>
-            <td><span class="tableText">{{player.ties}}</span></td>
-            <td><span class="tableText">{{player.losses}}</span></td>
-        </tr>
-    </table>
-</div>
-    <div class="row text-center" id="tablaG">
-        <table id="tableGames" class="table" width="100%">
-            <tr><th colspan="5" class="text-center tableTitle"><span class="tableText">Games</span></th> </tr>
-            <tr><th><span class="tableText">Player 1</span></th><th></th><th><span class="tableText">Player 2</span></th><th></th><th></th></tr>
-            <tr v-for="x in gamesList">
-                <td><span class="tableText">{{x.gamePlayers[0].player.email}}</span></td>
-                <td><span class="tableText">vs.</span></td>
-                <td><span class="tableText">{{x.gamePlayers[1].player.email}}</span></td>
-                <td><button class="btn btn-success">Enter</button></td>
-                <td><button class="btn btn-warning">Join Game</button></td>
-            </tr>
-        </table>
+    <div>
+        <div class="row text-center" id="tablaL">
+            <table id="leaderboard" class="table table-dark table-striped" width="100%">
+                <tr><th colspan="6" class="text-center tableTitle"><span class="tableText">Leaderboard</span></th></tr>
+                <tr><th><span class="tableText">Player</span></th><th><span class="tableText">Games</span></th><th><span class="tableText">Total Score</span></th><th><span class="tableText">Wins</span></th><th><span class="tableText">Ties</span></th><th><span class="tableText">Losses</span></th></tr>
+                <tr v-for="player in players">
+                    <td><span class="tableText">{{player.username}}</span></td>
+                    <td><span class="tableText">{{player.games}}</span></td>
+                    <td><span class="tableText">{{player.total}}</span></td>
+                    <td><span class="tableText">{{player.wins}}</span></td>
+                    <td><span class="tableText">{{player.ties}}</span></td>
+                    <td><span class="tableText">{{player.losses}}</span></td>
+                </tr>
+            </table>
+        </div>
+        <div v-if="user != 'Guest'" class="row text-center" id="tablaMG">
+            <table id="tableMyGames" class="table table-dark table-striped" width="100%">
+                <tr><th colspan="4" class="text-center tableTitle"><span class="tableText">My Games</span></th> </tr>
+                <tr><th><span class="tableText">Player 1</span></th><th></th><th><span class="tableText">Player 2</span></th><th></th></tr>
+                <tr v-for="x in myGames">
+                    <td><span class="tableText">{{x.gamePlayers[0].player.email}}</span></td>
+                    <td><span class="tableText">vs.</span></td>
+                    <td><span class="tableText">{{x.gamePlayers[1].player.email}}</span></td>
+                    <td><button class="btn btn-success">Enter</button></td>
+                </tr>
+            </table>
+        </div>
+        <div class="row text-center" id="tablaG">
+            <table id="tableGames" class="table table-dark table-striped" width="100%">
+                <tr><th colspan="4" class="text-center tableTitle"><span class="tableText">Games</span></th> </tr>
+                <tr><th><span class="tableText">Player 1</span></th><th></th><th><span class="tableText">Player 2</span></th><th></th></tr>
+                <tr v-for="x in games">
+                    <td><span class="tableText">{{x.gamePlayers[0].player.email}}</span></td>
+                    <td><span class="tableText">vs.</span></td>
+                    <td><span class="tableText">{{x.gamePlayers[1].player.email}}</span></td>
+                    <td><button v-if="user != 'Guest'" class="btn btn-warning">Join Game</button></td>
+                </tr>
+            </table>
+        </div>
     </div>
 </div>
 <script src="script/popper.min.js"></script>
