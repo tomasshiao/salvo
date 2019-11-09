@@ -95,11 +95,3 @@ function getGames(){
     app.myGames = misJuegos;
     })
 }
-function placeShips(){
-$.ajax({
-    type: 'POST',
-    contentType: 'application/json; charset=UTF-8',
-    url: '/api/games/players/1/ships',
-    data: JSON.stringify
-})
-}
