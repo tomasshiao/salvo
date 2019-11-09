@@ -61,8 +61,9 @@
                 <tr v-for="x in games">
                     <td><span class="tableText">{{x.gamePlayers[0].player.email}}</span></td>
                     <td><span class="tableText">vs.</span></td>
-                    <td><span class="tableText">{{x.gamePlayers[1].player.email}}</span></td>
-                    <td><button v-if="user != 'Guest'" class="btn btn-warning">Join Game</button></td>
+                    <td v-if="x.gamePlayers[1] != null"><span class="tableText">{{x.gamePlayers[1].player.email}}</span></td>
+                    <td v-if="x.gamePlayers[1] == null"><span class="tableText">Nobody here yet...</span></td>
+                    <td><button v-if="user != 'Guest' && x.gamePlayers[1] == null" class="btn btn-warning">Join Game</button></td>
                 </tr>
             </table>
         </div>
