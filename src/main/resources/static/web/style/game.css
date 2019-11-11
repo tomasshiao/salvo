@@ -27,3 +27,7 @@ font-size: 32px;
 .btn-info {
     margin-left: 10px;
 }
+#logOut, #formularioLogIn{
+    margin-left: 5%;
+    margin-right:5%;
+}

@@ -3,7 +3,6 @@ var app = new Vue({
     data:{
         players:[],
         games:[],
-        myGames: [],
         user: ""
     },
     methods:{
@@ -12,11 +11,15 @@ var app = new Vue({
                 .done(function(){
                     swal("Success: You're in. Good luck. Mercy has no place in this battle.",
                     {
-                    timer: 3000
+                    timer: 10000
                     });
                     window.setTimeout(function(){
-                    window.location.href = '/web/game.html?gp='+data.gpid;}, 3000)
+                    window.location.href = '/web/game.html?gp='+data.gpid;}, 10000);
+                    location.reload();
                     })
+                .fail(function(){
+                    swal("Be quicker next time, this game's already fool -er- I meant full!");
+                })
                 },
          login(){
              var request = {
@@ -62,12 +65,25 @@ var app = new Vue({
         createGame(){
             $.post("/api/games")
                 .done(function(data){
-                window.location.href = 'web/game.html?gp=' + data.gpid;
+                console.log(data);
+                console.log(data.gpid);
+                //window.location.href = 'web/game.html?gp=' + data.gpid;
+                })
+        },
+        reenter(gp){
+            $.get("/api/games")
+                .done(function(data){
+                    var array = gp.filter(gamePlayer.player.id == data.player.id);
+                    window.location.href = '/web/game.html?gp=' + array[0].player.id;
+                })
+                .fail(function(){
+                    swal("Mind your own business, this game's not yours," + user.email);
                 })
         }
         },
     created: function(){
-        getGames()
+        getGames(),
+        getLeaderboard()
     }
 })
 function getLeaderboard() {
@@ -83,15 +99,11 @@ function getLeaderboard() {
     });
 }
 
-getLeaderboard();
-
 function getGames(){
  $.get('/api/games')
 .done(function(data){
     var games = data.games;
     app.games = games;
     app.user = data.player;
-    var misJuegos = games.filter(juego => app.user.email == juego.gamePlayers[0].player.email || app.user.email == juego.gamePlayers[1].player.email);
-    app.myGames = misJuegos;
     })
 }

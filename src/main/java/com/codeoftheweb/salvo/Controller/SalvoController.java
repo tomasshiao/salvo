@@ -149,5 +149,5 @@ public class SalvoController {
         gamePlayerRepository.save(gamePlayer);
 
         return new ResponseEntity<>(MakeMap("gpid", gamePlayer.getId()), HttpStatus.CREATED);
-}
+    }
 }
