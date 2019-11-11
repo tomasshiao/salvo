@@ -23,7 +23,7 @@
 <div v-show="user != 'Guest'">
     <div id="logOut" class="row">
         <input type="button" class="btn btn-danger col col-1"  @click="logout()" value="Log out">
-        <h3 class="col col-9 text-center">Bonjour, <span id="playerLoggueado">{{user.email}}</span>!</h3>
+        <h3 class="col col-9 text-center">Bienvenu(e), <span id="playerLoggueado">{{user.email}}</span>!</h3>
         <input type="button" class="btn btn-warning col col-2"  @click="createGame()" value="Create Game">
     </div>
 </div>
@@ -51,8 +51,8 @@
                     <td><span class="tableText">vs.</span></td>
                     <td v-if="x.gamePlayers[1] != null"><span class="tableText">{{x.gamePlayers[1].player.email}}</span></td>
                     <td v-if="x.gamePlayers[1] == null"><span class="tableText">Nobody here yet...</span></td>
-                    <td><button v-if="user != 'Guest' && x.gamePlayers[1] == null && x.gamePlayers[0].player.email != user.email" class="btn btn-warning">Join Game</button></td>
-                    <td><button v-if="user != 'Guest' && (x.gamePlayers.length == 2 &&(x.gamePlayers[0].player.email == user.email || x.gamePlayers[1].player.email == user.email) ||(x.gamePlayers.length == 1 && x.gamePlayers[0].player.email == user.email))" class="btn btn-success">Enter</button></td>
+                    <td><button v-if="user != 'Guest' && x.gamePlayers[1] == null && x.gamePlayers[0].player.email != user.email" class="btn btn-warning" @click="joinGame(x.id)">Join Game</button></td>
+                    <td><button v-if="user != 'Guest' && (x.gamePlayers.length == 2 &&(x.gamePlayers[0].player.email == user.email || x.gamePlayers[1].player.email == user.email) ||(x.gamePlayers.length == 1 && x.gamePlayers[0].player.email == user.email))" class="btn btn-success" @click="reenter(x.gamePlayers)">Enter</button></td>
                 </tr>
             </table>
         </div>

@@ -8,10 +8,10 @@ function getParameterByName(name) {
 }
 
 function loadData() {
-  $.get('/api/game_view/' + getParameterByName('id'))
+  $.get('/api/game_view/' + getParameterByName('gp'))
     .done(function (game) {
       var playerInfo;
-      if (game.gamePlayers[0].id == getParameterByName('id'))
+      if (game.gamePlayers[0].id == getParameterByName('gp'))
         playerInfo = [game.gamePlayers[0].player, game.gamePlayers[1].player];
       else
         playerInfo = [game.gamePlayers[1].player, game.gamePlayers[0].player];
@@ -57,4 +57,8 @@ function isHit(shipLocation,salvoes,playerId) {
       });
   });
   return hit;
+}
+
+function backToMenu(){
+    window.location.href = 'games.html';
 }

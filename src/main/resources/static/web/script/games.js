@@ -8,17 +8,14 @@ var app = new Vue({
     methods:{
         joinGame(gameId){
             $.post("/api/games/" + gameId + "/players")
-                .done(function(){
-                    swal("Success: You're in. Good luck. Mercy has no place in this battle.",
-                    {
-                    timer: 10000
-                    });
-                    window.setTimeout(function(){
-                    window.location.href = '/web/game.html?gp='+data.gpid;}, 10000);
-                    location.reload();
+                .done(function(data){
+                    console.log(gameId);
+                    console.log(data.gpid);
+                    swal("Success: You're in. Good luck. Mercy has no place in this battle.");
+                    window.location.href = '/web/game.html?gp='+data.gpid;
                     })
                 .fail(function(){
-                    swal("Be quicker next time, this game's already fool -er- I meant full!");
+                    swal("How sad, you're not even capable of joining a game.");
                 })
                 },
          login(){
@@ -28,8 +25,8 @@ var app = new Vue({
                           };
                  $.post("/api/login", request)
                      .done(function() {
+                      location.reload();
                       swal("Oh, it's you. good to see you again, I guess.");
-                         location.reload();
                      })
                      .fail(function() {
                          console.log("login failed");
@@ -67,18 +64,17 @@ var app = new Vue({
                 .done(function(data){
                 console.log(data);
                 console.log(data.gpid);
-                //window.location.href = 'web/game.html?gp=' + data.gpid;
+                window.location.href = 'game.html?gp=' + data.gpid;
                 })
         },
-        reenter(gp){
-            $.get("/api/games")
-                .done(function(data){
-                    var array = gp.filter(gamePlayer.player.id == data.player.id);
-                    window.location.href = '/web/game.html?gp=' + array[0].player.id;
-                })
-                .fail(function(){
-                    swal("Mind your own business, this game's not yours," + user.email);
-                })
+        reenter(gamePlayers){
+            var gamePlayerId = 0;
+            if(gamePlayers[0].player.email == app.user.email){
+                gamePlayerId = gamePlayers[0].gpid
+            } else {
+                gamePlayerId = gamePlayers[1].gpid
+            }
+            window.location.href = 'game.html?gp=' + gamePlayerId;
         }
         },
     created: function(){

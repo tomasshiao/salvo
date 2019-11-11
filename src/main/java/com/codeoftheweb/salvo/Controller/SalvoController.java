@@ -129,8 +129,8 @@ public class SalvoController {
             return new ResponseEntity<>(MakeMap("gpid", gamePlayer.getId()), HttpStatus.CREATED);
         }
     }
-    @RequestMapping(path = "/games/{id}/players")
-    public ResponseEntity<Map<String, Object>>joinGame(@RequestParam Long id, Authentication authentication){
+    @RequestMapping(path = "/games/{id}/players", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>>joinGame(@PathVariable Long id, Authentication authentication){
         Game game = gameRepository.findById(id).orElse(null);
         Player player = playerRepository.findByUserName(authentication.getName());
         if(game == null){

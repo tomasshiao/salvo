@@ -8,15 +8,16 @@
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 <body>
-<div class="container">
-  <div>
+<div class="container" id="app">
+  <div class="row">
     <span id="playerInfo"></span>
+    <button class="col col-2" onclick="backToMenu()">Back</button>
   </div>
   <div class="row">
     <h1 class="text-center" width="100%"><b>BATTLESHIP</b></h1>
   </div>
   <div class="row">
-    <div class="col">
+    <div class="col col-6">
       <section>
         <h2>Your Board</h2>
         <table border="1">
@@ -80,7 +81,7 @@
         </table>
       </section>
     </div>
-    <div class="col">
+    <div class="col col-6">
       <section>
         <h2>Opponent's board</h2>
         <table border="1">
@@ -145,6 +146,7 @@
       </section>
     </div>
   </div>
+</div>
 <script src="script/popper.min.js"></script>
 <script src="script/jquery-3.3.1.min.js"></script>
 <script src="script/bootstrap.min.js"></script>
