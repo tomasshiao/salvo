@@ -103,3 +103,17 @@ function getGames(){
     app.user = data.player;
     })
 }
+function placeShips(gamePlayerId){
+    $.post({
+      url: "api/games/players/" + gamePlayerId + "/ships",
+      data: JSON.stringify([{ shipType: shipType, shipLocations: shipLocations}]),
+      dataType: "text",
+      contentType: "application/json"
+    })
+    .done(function (response, status, jqXHR) {
+      alert( "Ships added: " + response );
+    })
+    .fail(function (jqXHR, status, httpError) {
+      alert("Failed to add ships: " + status + " " + httpError);
+    })
+}

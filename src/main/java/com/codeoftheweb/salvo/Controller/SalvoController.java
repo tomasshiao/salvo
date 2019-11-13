@@ -24,16 +24,19 @@ import java.util.stream.Collectors;
 public class SalvoController {
 
     @Autowired
-    GameRepository gameRepository;
+    private GameRepository gameRepository;
 
     @Autowired
-    GamePlayerRepository gamePlayerRepository;
+    private GamePlayerRepository gamePlayerRepository;
 
     @Autowired
-    PlayerRepository playerRepository;
+    private PlayerRepository playerRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private ShipRepository shipRepository;
 
     private boolean isGuest(Authentication authentication) {
         return authentication == null || authentication instanceof AnonymousAuthenticationToken;
@@ -149,5 +152,26 @@ public class SalvoController {
         gamePlayerRepository.save(gamePlayer);
 
         return new ResponseEntity<>(MakeMap("gpid", gamePlayer.getId()), HttpStatus.CREATED);
+    }
+    @RequestMapping(path = "/games/players/{gpid}/ships", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> placedShips(@PathVariable Long gpid, Authentication authentication, @RequestBody List<Ship> ships){
+        GamePlayer gamePlayer = gamePlayerRepository.findById(gpid).orElse(null);
+        Player player = playerRepository.findByUserName(authentication.getName());
+        if(isGuest(authentication)){
+            return new ResponseEntity<>(MakeMap("error", "Access denied. Please log in. "), HttpStatus.UNAUTHORIZED);
+        }
+        if(gamePlayer == null) {
+            return new ResponseEntity<>(MakeMap("error", "There's no game player."), HttpStatus.UNAUTHORIZED);
+        }
+        if(player.getId() != gamePlayer.getPlayer().getId()){
+            return new ResponseEntity<>(MakeMap("error", "You're not this one, get outta'ere!"), HttpStatus.UNAUTHORIZED);
+        }
+        if(gamePlayer.getShips().size() > 0){
+            return new ResponseEntity<>(MakeMap("error", "Ships already placed."), HttpStatus.FORBIDDEN);
+        }
+        ships.stream().map(ship ->
+            shipRepository.save(new Ship (ship.getShipType(), ship.getShipLocation(), gamePlayer))
+        ).collect(Collectors.toList());
+        return new ResponseEntity<>(MakeMap("success", "Ships placed. The dies are thrown."), HttpStatus.CREATED);
     }
 }
