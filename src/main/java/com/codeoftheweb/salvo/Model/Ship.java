@@ -43,6 +43,10 @@ public class Ship {
         return shipLocation;
     }
 
+    public void setGamePlayer(GamePlayer gamePlayer) {
+        this.gamePlayer = gamePlayer;
+    }
+
     public Ship(String shipType, Set<String> shipLocation, GamePlayer gamePlayer){
         this.shipType = shipType;
         this.shipLocation = shipLocation;

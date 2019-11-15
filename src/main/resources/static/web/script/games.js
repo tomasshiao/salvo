@@ -64,7 +64,7 @@ var app = new Vue({
                 .done(function(data){
                 console.log(data);
                 console.log(data.gpid);
-                window.location.href = 'game.html?gp=' + data.gpid;
+                window.location.href = '/web/placeShipsGrid.html?gp=' + data.gpid;
                 })
         },
         reenter(gamePlayers){
@@ -101,19 +101,5 @@ function getGames(){
     var games = data.games;
     app.games = games;
     app.user = data.player;
-    })
-}
-function placeShips(gamePlayerId){
-    $.post({
-      url: "api/games/players/" + gamePlayerId + "/ships",
-      data: JSON.stringify([{ shipType: shipType, shipLocations: shipLocations}]),
-      dataType: "text",
-      contentType: "application/json"
-    })
-    .done(function (response, status, jqXHR) {
-      alert( "Ships added: " + response );
-    })
-    .fail(function (jqXHR, status, httpError) {
-      alert("Failed to add ships: " + status + " " + httpError);
     })
 }
