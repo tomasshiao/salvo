@@ -11,8 +11,7 @@ var app = new Vue({
                 .done(function(data){
                     console.log(gameId);
                     console.log(data.gpid);
-                    swal("Success: You're in. Good luck. Mercy has no place in this battle.");
-                    window.location.href = '/web/game.html?gp='+data.gpid;
+                    window.location.href = '/web/placeShipsGrid.html?gp=' + data.gpid;
                     })
                 .fail(function(){
                     swal("How sad, you're not even capable of joining a game.");

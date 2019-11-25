@@ -245,6 +245,13 @@ const listenBusyCells = function(id){
     }
 }
 
+function getParameterByName(name) {
+  var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+  return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+}
+getParameterByName('gp');
+var gpid = Number(getParameterByName('gp'));
+
 const obtenerPosicion = function (shipType) {
     var ship = new Object();
     ship["name"] = $("#" + shipType).attr('id');
@@ -263,29 +270,27 @@ const obtenerPosicion = function (shipType) {
         }
     }
     var objShip = new Object();
-    objShip["ship"] = ship.shipType;
-    objShip["shipLocation"] = ship.shipLocation;
+    objShip["shipType"] = ship.name;
+    objShip["shipLocation"] = ship.positions;
     return objShip;
 }
 
-function getParameterByName(name) {
-  var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
-  return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
-}
-getParameterByName('gp');
-var gpid = Number(getParameterByName('gp'));
-
 function placeShips(gpid){
-    var shipTypes = ['battleship','carrier','destroyer','patrol_boat','submarine'];
-    var datosShips = shipTypes.map(x => obtenerPosicion(x));
+    var shipTypes = ["battleship","carrier","destroyer","patrol_boat","submarine"];
+    var placedShips = [];
+    for(var i=0; i<shipTypes.length; i++){
+    placedShips[i] = obtenerPosicion(shipTypes[i]);
+    }
+    console.log(placedShips);
+    //placedShips = shipTypes.map(x => obtenerPosicion(x));
     $.post({
       url: "/api/games/players/" + gpid + "/ships",
-      data: JSON.stringify(datosShips),
+      data: JSON.stringify(placedShips),
       dataType: "text",
       contentType: "application/json"
     })
     .done(function (response, status, jqXHR) {
-      alert( "Ships added: " + response );
+      alert( "Ships added! The dies are thrown.");
     })
     .then(function(){
     window.location.href = 'game.html?gp=' + gpid;
