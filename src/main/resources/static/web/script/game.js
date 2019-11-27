@@ -1,68 +1,122 @@
-$(function () {
-  loadData();
-});
+var gamesData
+var actualPlayer
+var opponent={
+"email": "An incognito player whose identity is yet to be revealed."}
+
+//Para obtener el id del gamePlayer colocado como query en la url
+var gpId = getParameterByName("gp")
+console.log(gpId)
 
 function getParameterByName(name) {
   var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
   return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
 }
 
-function loadData() {
-  $.get('/api/game_view/' + getParameterByName('gp'))
-    .done(function (game) {
-      var playerInfo;
-      if(game.gamePlayers.length == 2){
-      if (game.gamePlayers[0].gpid == getParameterByName('gp'))
-        playerInfo = [game.gamePlayers[0].player, game.gamePlayers[1].player];
-      else
-        playerInfo = [game.gamePlayers[1].player, game.gamePlayers[0].player];
+fetch("/api/game_view/"+ gpId)
+.then(function(response){
+	return response.json()
+})
+.then(function(json){
+  gamesData = json
+  //Determina el jugador actual y contra quien juega
+  WhoIsWho()
+  //Cargamos por medio de gridstackla los barcos y chequeamos si ya hay barcos o no para hacer una grilla statica o no
+  //(En un futuro se trabajara sin la pagina intermedia de place-ship por lo que de momento esto comparacion esta demas)
+  if(gamesData.ships.length > 0){
+    //if true, the grid is initialized in static mode, that is, the ships can't be moved
+    loadGrid(true)
+  } else{
+    //On the contrary, the grid is initialized in dynamic mode, allowing the user to move the ships
+    loadGrid(false)
+     //A futuro para cargar los salvos por medio de gridstack
+    //loadGridSalvo()
+  }
 
-      $('#playerInfo').text(playerInfo[0].email + ' (you) vs ' + playerInfo[1].email);
-      } else {
-        playerInfo = [game.gamePlayers[0].player];
-        $('#playerInfo').text(playerInfo[0].email + ' (you) vs ' + "An incognito player whose identity is yet to be revealed");
-      }
-      game.ships.forEach(function (shipPiece) {
-        shipPiece.locations.forEach(function (shipLocation) {
-          let turnHit = isHit(shipLocation,game.salvoes,playerInfo[0].id)
-          if(turnHit >0){
-            $('#B_' + shipLocation).addClass('ship-piece-hit');
-            $('#B_' + shipLocation).text(turnHit);
-          }
-          else
-            $('#B_' + shipLocation).addClass('ship-piece');
-        });
-      });
-      game.salvoes.forEach(function (salvo) {
-        console.log(salvo);
-        if (playerInfo[0].id === salvo.player) {
-          salvo.locations.forEach(function (location) {
-            $('#S_' + location).addClass('salvo');
-          });
-        } else {
-          salvo.locations.forEach(function (location) {
-            $('#_' + location).addClass('salvo');
-          });
+  createGrid(11, $(".grid-salvoes"), 'salvoes') //carga la matriz que contendra los salvoes pero sin gridstack.js
+  setSalvoes() //carga los salvoes ya guardados
+//  var contador = 0
+    //Una vez cargado los salvoes con createGrid procedemos a establecer una funcion click por cada celda de la siguiente manera
+//    $('div[id^="salvoes"].grid-cell').click(function(){
+        //seguir para codear el disparar una celda, tener en cuenta el tamaño maximo de disparos y que no pueda disparar a una celda ya pintada
+        //la diferencia entre una celda pintada y otra que no esta en la clase "salvo" que se le agrega
+//        console.log(evt.target)
+//        console.log("d")
+//        si (laCeldaPintada){
+//            alert("no puedes")
+//        }else{
+//            if (!celdaAdisparar && contador < 5){
+//                addClass(celdaAdisparar)
+//                contador++
+//            }
+//        }
+//    });
+})
+.catch(function(error){
+	console.log(error)
+})
+
+function WhoIsWho(){
+  for(i = 0; i < gamesData.gamePlayers.length; i++){
+    if(gamesData.gamePlayers[i].gpid == gpId){
+      actualPlayer = gamesData.gamePlayers[i].player
+    } else{
+      opponent = gamesData.gamePlayers[i].player
+    }
+  }
+
+  let logger = document.getElementById("logger")
+  let wrapper = document.createElement('DIV')
+  let p1 = document.createElement('P')
+  p1.innerHTML = `Guten Tag, ${actualPlayer.email}!`
+  let p2 = document.createElement('P')
+  p2.innerHTML = `Now you are playing against: ${opponent.email}`
+  wrapper.appendChild(p1)
+  wrapper.appendChild(p2)
+  logger.appendChild(wrapper)
+}
+
+const setSalvoes = function () {
+    for (i = 0; i < gamesData.salvoes.length; i++) {
+        for (j = 0; j < gamesData.salvoes[i].salvoLocations.length; j++) {
+            let turn = gamesData.salvoes[i].turn
+            let player = gamesData.salvoes[i].player
+            let x = +(gamesData.salvoes[i].salvoLocations[j][1]) - 1
+            let y = stringToInt(gamesData.salvoes[i].salvoLocations[j][0].toUpperCase())
+            if (player == actualPlayer.id) {
+                document.getElementById(`salvoes${y}${x}`).classList.add('salvo')
+                document.getElementById(`salvoes${y}${x}`).innerHTML = `<span>${turn}</span>`
+            } else {
+                if (document.getElementById(`ships${y}${x}`).className.indexOf('busy-cell') != -1) {
+                    document.getElementById(`ships${y}${x}`).classList.remove('busy-cell')
+                    document.getElementById(`ships${y}${x}`).classList.add('ship-down')
+                    document.getElementById(`ships${y}${x}`).innerHTML = `<span>${turn}</span>`
+                }
+            }
         }
-      });
+    }
+}
+
+//shots sera un modelo de salvo:
+//shot{
+//  turn: 1,
+//  locations:["A1","C2","G4"]
+//}
+//Disparar los salvos
+
+function shoot(turno,locations){
+    var url = "/api/games/players/" + getParameterByName("gp") + "/salvoes"
+    $.post({
+        url: url,
+        data: JSON.stringify({turnNumber: turno, salvoLocation:locations}),
+        dataType: "text",
+        contentType: "application/json"
     })
-    .fail(function (jqXHR, textStatus) {
-      alert('Failed: ' + textStatus);
-    });
-}
+    .done(function (response, status, jqXHR) {
+        alert( "Salvo added: " + response );
+        //location.reload
+    })
+    .fail(function (jqXHR, status, httpError){
+        alert("Failed to add salvo: " + status + " " + httpError);
+    })
 
-function isHit(shipLocation,salvoes,playerId) {
-  var hit = 0;
-  salvoes.forEach(function (salvo, ship) {
-    if(salvo.player != playerId)
-      salvo.locations.forEach(function (location) {
-        if(ship.locations === location)
-          hit = salvo.turn;
-      });
-  });
-  return hit;
-}
-
-function backToMenu(){
-    window.location.href = 'games.html';
 }
