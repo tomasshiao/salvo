@@ -282,7 +282,6 @@ function placeShips(gpid){
     placedShips[i] = obtenerPosicion(shipTypes[i]);
     }
     console.log(placedShips);
-    //placedShips = shipTypes.map(x => obtenerPosicion(x));
     $.post({
       url: "/api/games/players/" + gpid + "/ships",
       data: JSON.stringify(placedShips),

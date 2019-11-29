@@ -25,7 +25,6 @@ var app = new Vue({
                  $.post("/api/login", request)
                      .done(function() {
                       location.reload();
-                      swal("Oh, it's you. good to see you again, I guess.");
                      })
                      .fail(function() {
                          console.log("login failed");
@@ -39,9 +38,14 @@ var app = new Vue({
                               };
                      $.post("/api/players", request)
                          .done(function(){
-                             location.reload();
                              swal("Hell yeah! Account created. Time to destroy some ships.");
                          })
+                         .then(function(){
+                          $.post("/api/login", {username: request.userName, password: request.password})
+                               .done(function() {
+                                location.reload();
+                               })
+                          })
                          .fail(function(){
                              swal("Error. Try something else so you can join our cult.");
                          })

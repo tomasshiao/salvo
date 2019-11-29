@@ -21,7 +21,7 @@ public class Ship {
 
     @ElementCollection
     @Column(name = "shipLocation")
-    private Set<String> shipLocation;
+    private List<String> shipLocation;
 
     public Ship(){
 
@@ -39,7 +39,7 @@ public class Ship {
         return shipType;
     }
 
-    public Set<String> getShipLocation() {
+    public List<String> getShipLocation() {
         return shipLocation;
     }
 
@@ -47,7 +47,7 @@ public class Ship {
         this.gamePlayer = gamePlayer;
     }
 
-    public Ship(String shipType, Set<String> shipLocation, GamePlayer gamePlayer){
+    public Ship(String shipType, List<String> shipLocation, GamePlayer gamePlayer){
         this.shipType = shipType;
         this.shipLocation = shipLocation;
         this.gamePlayer = gamePlayer;

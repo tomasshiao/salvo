@@ -12,7 +12,7 @@
     <div v-show="user == 'Guest'">
         <div id="formularioLogIn">
             <form class="form-inline row" id="login-form" onsubmit="return false">
-                <label for="username" class="col col-1">Name: </label><input class="form-control col col-3" id="username" type="email" name="username" required>
+                <label for="username" class="col col-1">Name: </label><input class="form-control col col-3" id="username" name="username" required>
                 <label for="password" class="col col-1">Password: </label><input class="form-control col col-3" id="password" type="password" name="password" required>
                 <br>
                 <input type="button" class="form-contro  log-in-button btn btn-info col col-1" @click="login()" value="Log in">

@@ -37,7 +37,6 @@ const loadGrid = function (isStatic) {
 
 }
 
-
 //createGrid construye la estructura de la matriz
 /*
 size:refiere al tamaño de nuestra grilla (siempre sera una matriz

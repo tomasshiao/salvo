@@ -20,14 +20,12 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
+import org.w3c.dom.stylesheets.LinkStyle;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @SpringBootApplication
 public class SalvoApplication {
@@ -82,11 +80,11 @@ public class SalvoApplication {
 			gamePlayerRepository.save(gamePlayer5);
 			gamePlayerRepository.save(gamePlayer6);
 
-			Set<String> shipL1 = new HashSet<>(Arrays.asList("H2","H3","H4"));
-			Set<String> shipL2 = new HashSet<>(Arrays.asList("E1","F1","G1"));
-			Set<String> shipL3 = new HashSet<>(Arrays.asList("B4","B5"));
-			Set<String> shipL4 = new HashSet<>(Arrays.asList("B5","C5","D5"));
-			Set<String> shipL5 = new HashSet<>(Arrays.asList("F1","F2"));
+			List<String> shipL1 = new LinkedList<>(Arrays.asList("H2","H3","H4"));
+			List<String> shipL2 = new LinkedList<>(Arrays.asList("E1","F1","G1"));
+			List<String> shipL3 = new LinkedList<>(Arrays.asList("B4","B5"));
+			List<String> shipL4 = new LinkedList<>(Arrays.asList("B5","C5","D5"));
+			List<String> shipL5 = new LinkedList<>(Arrays.asList("F1","F2"));
 			Ship ship1 = new Ship("Destroyer",shipL1,gamePlayer1);
 			Ship ship2 = new Ship("Submarine",shipL2,gamePlayer1);
 			Ship ship3 = new Ship("Patrol Boat",shipL3,gamePlayer1);

@@ -120,3 +120,6 @@ function shoot(turno,locations){
     })
 
 }
+function backToMenu(){
+    window.location.href = '/web/games.html';
+}
