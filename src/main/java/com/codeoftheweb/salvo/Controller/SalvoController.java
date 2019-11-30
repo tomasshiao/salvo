@@ -1,9 +1,6 @@
 package com.codeoftheweb.salvo.Controller;
 
-import com.codeoftheweb.salvo.Model.Game;
-import com.codeoftheweb.salvo.Model.GamePlayer;
-import com.codeoftheweb.salvo.Model.Player;
-import com.codeoftheweb.salvo.Model.Ship;
+import com.codeoftheweb.salvo.Model.*;
 import com.codeoftheweb.salvo.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,6 +34,9 @@ public class SalvoController {
 
     @Autowired
     private ShipRepository shipRepository;
+
+    @Autowired
+    private SalvoRepository salvoRepository;
 
     private boolean isGuest(Authentication authentication) {
         return authentication == null || authentication instanceof AnonymousAuthenticationToken;
@@ -173,5 +173,21 @@ public class SalvoController {
             shipRepository.save(new Ship (ship.getShipType(), ship.getShipLocation(), gamePlayer))
         ).collect(Collectors.toList());
         return new ResponseEntity<>(MakeMap("success", "Ships placed. The dies are thrown."), HttpStatus.CREATED);
+    }
+    @RequestMapping(path = "/games/players/{gpid}/salvoes", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> firedSalvoes(@PathVariable Long gpid, Authentication authentication, @RequestBody Salvo salvo ){
+        GamePlayer gamePlayer = gamePlayerRepository.findById(gpid).orElse(null);
+        Player player = playerRepository.findByUserName(authentication.getName());
+        GamePlayer oponent = gamePlayer.getGame().getGamePlayers().stream().filter(gp -> gp.getId() != gpid).findFirst().get();
+        if(isGuest(authentication)){
+            return new ResponseEntity<>(MakeMap("error", "Who TF are you, identify yourself"), HttpStatus.UNAUTHORIZED);
+        }
+        if(player.getId() != gamePlayer.getPlayer().getId()){
+            return new ResponseEntity<>(MakeMap("error", "Intruder alert!"), HttpStatus.UNAUTHORIZED);
+        }
+        if(gamePlayer.getSalvoes().size() > oponent.getSalvoes().size()) {
+            return new ResponseEntity<>(MakeMap("success", "FIREEEEEEEE!"), HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>(MakeMap("error", "Wait for your turn, humanised impatience."), HttpStatus.FORBIDDEN);
     }
 }
