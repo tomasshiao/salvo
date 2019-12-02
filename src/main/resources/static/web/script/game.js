@@ -34,23 +34,19 @@ fetch("/api/game_view/"+ gpId)
 
   createGrid(11, $(".grid-salvoes"), 'salvoes') //carga la matriz que contendra los salvoes pero sin gridstack.js
   setSalvoes() //carga los salvoes ya guardados
-//  var contador = 0
     //Una vez cargado los salvoes con createGrid procedemos a establecer una funcion click por cada celda de la siguiente manera
-//    $('div[id^="salvoes"].grid-cell').click(function(){
+    $('div[id^="salvoes"].grid-cell').click(function(){
         //seguir para codear el disparar una celda, tener en cuenta el tamaño maximo de disparos y que no pueda disparar a una celda ya pintada
         //la diferencia entre una celda pintada y otra que no esta en la clase "salvo" que se le agrega
-//        console.log(evt.target)
-//        console.log("d")
-//        si (laCeldaPintada){
-//            alert("no puedes")
-//        }else{
-//            if (!celdaAdisparar && contador < 5){
-//                addClass(celdaAdisparar)
-//                contador++
-//            }
-//        }
-//    });
-})
+       //console.log(evt.target)
+        //console.log("d")
+        if (!$(this).hasClass("salvo")&&!$(this).hasClass("target")&&$(".target").length < 5){
+            $(this).addClass("target");
+        }else if($(this).hasClass("target")){
+            $(this).removeClass("target");
+           }
+        })
+    })
 .catch(function(error){
 	console.log(error)
 })
@@ -77,11 +73,11 @@ function WhoIsWho(){
 
 const setSalvoes = function () {
     for (i = 0; i < gamesData.salvoes.length; i++) {
-        for (j = 0; j < gamesData.salvoes[i].salvoLocations.length; j++) {
+        for (j = 0; j < gamesData.salvoes[i].locations.length; j++) {
             let turn = gamesData.salvoes[i].turn
             let player = gamesData.salvoes[i].player
-            let x = +(gamesData.salvoes[i].salvoLocations[j][1]) - 1
-            let y = stringToInt(gamesData.salvoes[i].salvoLocations[j][0].toUpperCase())
+            let x = +(gamesData.salvoes[i].locations[j][1]) - 1
+            let y = stringToInt(gamesData.salvoes[i].locations[j][0].toUpperCase())
             if (player == actualPlayer.id) {
                 document.getElementById(`salvoes${y}${x}`).classList.add('salvo')
                 document.getElementById(`salvoes${y}${x}`).innerHTML = `<span>${turn}</span>`
@@ -104,16 +100,30 @@ const setSalvoes = function () {
 //Disparar los salvos
 
 function shoot(turno,locations){
+     var turno = getTurn();
+        var locationsToShoot=[];
+        $(".target").each(function(){
+            let location = $(this).attr("id").substring(7);
+            //"00"
+            let locationConverted = String.fromCharCode(parseInt(location[0]) + 65) + (parseInt(location[1]) + 1)
+            // +65 --> ASCII
+            locationsToShoot.push(locationConverted)
+        })
     var url = "/api/games/players/" + getParameterByName("gp") + "/salvoes"
     $.post({
         url: url,
-        data: JSON.stringify({turnNumber: turno, salvoLocation:locations}),
+        data: JSON.stringify({turnNumber: turno, salvoLocation:locationsToShoot}),
         dataType: "text",
         contentType: "application/json"
     })
     .done(function (response, status, jqXHR) {
-        alert( "Salvo added: " + response );
-        //location.reload
+        alert( "SALVO FIRED!" );
+    })
+    .then(function(){
+        if($('div[id^="salvoes"].grid-cell.target')){
+            $(this).removeClass("target");
+            $(this).addClass("salvo");
+        }
     })
     .fail(function (jqXHR, status, httpError){
         alert("Failed to add salvo: " + status + " " + httpError);
@@ -122,4 +132,22 @@ function shoot(turno,locations){
 }
 function backToMenu(){
     window.location.href = '/web/games.html';
+}
+
+function getTurn (){
+  var arr=[]
+  var turn = 0;
+  gamesData.salvoes.map(function(salvo){
+    if(salvo.player == actualPlayer.id){
+      arr.push(salvo.turn);
+    }
+  })
+  turn = Math.max.apply(Math, arr);
+
+  if (turn == -Infinity){
+    return 1;
+  } else {
+    return turn + 1;
+  }
+
 }

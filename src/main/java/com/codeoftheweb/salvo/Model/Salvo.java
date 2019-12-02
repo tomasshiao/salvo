@@ -48,6 +48,9 @@ public class Salvo {
         return salvoLocation;
     }
 
+    public void setTurnNumber(int turnNumber) {
+        this.turnNumber = turnNumber;
+    }
 
     public Map<String, Object> toDTO(){
         Map<String, Object> dto = new LinkedHashMap<String, Object>();

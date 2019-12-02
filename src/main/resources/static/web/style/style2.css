@@ -203,3 +203,7 @@ body {
 .ship-down{
     background-color: red;
 }
+
+.target{
+    background-color: green;
+}

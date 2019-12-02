@@ -61,21 +61,21 @@ public class SalvoController {
         return dto;
     }
 
-    public List<Object> getGamesPlayersList(Set<GamePlayer> gamePlayers) {
+    private List<Object> getGamesPlayersList(Set<GamePlayer> gamePlayers) {
         return gamePlayers
                 .stream()
                 .map(gamePlayer -> gamePlayer.toDTO())
                 .collect(Collectors.toList());
     }
 
-    public List<Object> getShipsList(Set<Ship> ships) {
+    private List<Object> getShipsList(Set<Ship> ships) {
         return ships
                 .stream()
                 .map(ship -> ship.toDTO())
                 .collect(Collectors.toList());
     }
 
-    public Map<String,Object> MakeMap (String key, Object value){
+    private Map<String,Object> MakeMap (String key, Object value){
         Map<String, Object> mapaCreado = new LinkedHashMap<>();
         mapaCreado.put (key, value);
         return mapaCreado;
@@ -178,14 +178,15 @@ public class SalvoController {
     public ResponseEntity<Map<String, Object>> firedSalvoes(@PathVariable Long gpid, Authentication authentication, @RequestBody Salvo salvo ){
         GamePlayer gamePlayer = gamePlayerRepository.findById(gpid).orElse(null);
         Player player = playerRepository.findByUserName(authentication.getName());
-        GamePlayer oponent = gamePlayer.getGame().getGamePlayers().stream().filter(gp -> gp.getId() != gpid).findFirst().get();
+        GamePlayer opponent = gamePlayer.getGame().getGamePlayers().stream().filter(gp -> gp.getId() != gpid).findFirst().get();
         if(isGuest(authentication)){
             return new ResponseEntity<>(MakeMap("error", "Who TF are you, identify yourself"), HttpStatus.UNAUTHORIZED);
         }
         if(player.getId() != gamePlayer.getPlayer().getId()){
             return new ResponseEntity<>(MakeMap("error", "Intruder alert!"), HttpStatus.UNAUTHORIZED);
         }
-        if(gamePlayer.getSalvoes().size() > oponent.getSalvoes().size()) {
+        if(gamePlayer.getSalvoes().size() < opponent.getSalvoes().size()) {
+            salvo.setTurnNumber(gamePlayer.getSalvoes().size() + 1);
             return new ResponseEntity<>(MakeMap("success", "FIREEEEEEEE!"), HttpStatus.CREATED);
         }
         return new ResponseEntity<>(MakeMap("error", "Wait for your turn, humanised impatience."), HttpStatus.FORBIDDEN);
