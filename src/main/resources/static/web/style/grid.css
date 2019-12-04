@@ -2,3 +2,9 @@ body{
  background-image: url("https://www.wuwm.com/sites/wuwm/files/styles/x_large/public/201907/AdobeStock_143932362.jpeg");
  color: white;
 }
+#warn{
+    color: yellow;
+}
+p{
+    color: white;
+}
