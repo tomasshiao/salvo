@@ -52,6 +52,10 @@ public class Salvo {
         this.turnNumber = turnNumber;
     }
 
+    public void setGamePlayer(GamePlayer gamePlayer) {
+        this.gamePlayer = gamePlayer;
+    }
+
     public Map<String, Object> toDTO(){
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
         dto.put("turn", this.getTurnNumber());

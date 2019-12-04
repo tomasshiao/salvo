@@ -38,10 +38,6 @@ public class SalvoController {
     @Autowired
     private SalvoRepository salvoRepository;
 
-    private boolean isGuest(Authentication authentication) {
-        return authentication == null || authentication instanceof AnonymousAuthenticationToken;
-    }
-
     @RequestMapping("/games")
     public Map<String, Object> getGamesList(Authentication authentication) {
         Map<String, Object> dto = new LinkedHashMap<>();
@@ -73,12 +69,6 @@ public class SalvoController {
                 .stream()
                 .map(ship -> ship.toDTO())
                 .collect(Collectors.toList());
-    }
-
-    private Map<String,Object> MakeMap (String key, Object value){
-        Map<String, Object> mapaCreado = new LinkedHashMap<>();
-        mapaCreado.put (key, value);
-        return mapaCreado;
     }
 
     @RequestMapping("/game_view/{id}")
@@ -183,12 +173,40 @@ public class SalvoController {
             return new ResponseEntity<>(MakeMap("error", "Who TF are you, identify yourself"), HttpStatus.UNAUTHORIZED);
         }
         if(player.getId() != gamePlayer.getPlayer().getId()){
-            return new ResponseEntity<>(MakeMap("error", "Intruder alert!"), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(MakeMap("error", "Mind your own business!"), HttpStatus.FORBIDDEN);
         }
-        if(gamePlayer.getSalvoes().size() < opponent.getSalvoes().size()) {
+        if(gamePlayer.getId() == null){
+            return new ResponseEntity<>(MakeMap("error", "Intruder alert!"), HttpStatus.FORBIDDEN);
+        }
+        if(salvo.getSalvoLocation().size() < 5) {
+        return new ResponseEntity<>(MakeMap("error", "Quis eris?"), HttpStatus.FORBIDDEN);
+        } else if(!isThisPlayersTurn(salvo, gamePlayer.getSalvoes())){
             salvo.setTurnNumber(gamePlayer.getSalvoes().size() + 1);
+            salvo.setGamePlayer(gamePlayer);
+            salvoRepository.save(salvo);
             return new ResponseEntity<>(MakeMap("success", "FIREEEEEEEE!"), HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(MakeMap("error", "Wait for your turn, you humanised impatience!"), HttpStatus.FORBIDDEN);
         }
-        return new ResponseEntity<>(MakeMap("error", "Wait for your turn, humanised impatience."), HttpStatus.FORBIDDEN);
+    }
+
+    private boolean isGuest(Authentication authentication) {
+        return authentication == null || authentication instanceof AnonymousAuthenticationToken;
+    }
+
+    private Map<String,Object> MakeMap (String key, Object value){
+        Map<String, Object> mapaCreado = new LinkedHashMap<>();
+        mapaCreado.put (key, value);
+        return mapaCreado;
+    }
+
+    private boolean isThisPlayersTurn(Salvo newSalvo, Set<Salvo> playersSalvoes){
+        boolean isPlayersTurn = false;
+        for(Salvo salvo: playersSalvoes){
+            if(salvo.getTurnNumber() == newSalvo.getTurnNumber()){
+                isPlayersTurn = true;
+            }
+        }
+        return isPlayersTurn;
     }
 }

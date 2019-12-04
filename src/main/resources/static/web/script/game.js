@@ -76,7 +76,7 @@ const setSalvoes = function () {
         for (j = 0; j < gamesData.salvoes[i].locations.length; j++) {
             let turn = gamesData.salvoes[i].turn
             let player = gamesData.salvoes[i].player
-            let x = +(gamesData.salvoes[i].locations[j][1]) - 1
+            let x = +(gamesData.salvoes[i].locations[j].substring(1)) - 1
             let y = stringToInt(gamesData.salvoes[i].locations[j][0].toUpperCase())
             if (player == actualPlayer.id) {
                 document.getElementById(`salvoes${y}${x}`).classList.add('salvo')
@@ -120,10 +120,8 @@ function shoot(turno,locations){
         alert( "SALVO FIRED!" );
     })
     .then(function(){
-        if($('div[id^="salvoes"].grid-cell.target')){
-            $(this).removeClass("target");
-            $(this).addClass("salvo");
-        }
+        $('div[id^="salvoes"].grid-cell.target').removeClass("target").addClass("salvo");
+        location.reload();
     })
     .fail(function (jqXHR, status, httpError){
         alert("Failed to add salvo: " + status + " " + httpError);
