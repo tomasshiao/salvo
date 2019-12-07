@@ -289,13 +289,36 @@ function placeShips(gpid){
       contentType: "application/json"
     })
     .done(function (response, status, jqXHR) {
-      alert( "Ships added! The dies are thrown.");
-    })
-    .then(function(){
-    window.location.href = 'game.html?gp=' + gpid;
+      swal.fire({
+      icon: 'warning',
+      html:  '<h1 id="warn" class="text-center"><b>WARNING!</b></h1>' +
+              '<p class="text-center">Once you click <i>Done</i>, you <u>cannot</u> add, delete, modify and/or replace your ships. You must place all your 5 (FIVE) ships to start the game.</p>',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: "Yes, place 'em!"
+      }).then((result) => {
+      if(result.value){
+      swal.fire({
+        icon: 'success',
+        title: "Ships added!",
+        text: "The dies are thrown.",
+        showConfirmButton: false,
+        timer: 1500
+        });
+        }
+      }).then(function(){
+            window.location.href = 'game.html?gp=' + gpid;
+            })
     })
     .fail(function (jqXHR, status, httpError) {
-      alert("Failed to add ships: " + status + " " + httpError);
+      Swal.fire({
+      icon: 'error',
+      title:"Failed to add ships :(",
+      text: status + " " + httpError,
+      showConfirmButton: false,
+      timer: 1500
+      });
     })
     }
 

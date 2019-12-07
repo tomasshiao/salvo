@@ -14,7 +14,13 @@ var app = new Vue({
                     window.location.href = '/web/placeShipsGrid.html?gp=' + data.gpid;
                     })
                 .fail(function(){
-                    swal("How sad, you're not even capable of joining a game.");
+                    swal.fire({
+                    icon: 'error',
+                    text: "How sad, you're not even capable of joining a game.",
+                    showConfirmButton: true,
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: '>:('
+                    });
                 })
                 },
          login(){
@@ -28,7 +34,14 @@ var app = new Vue({
                      })
                      .fail(function() {
                          console.log("login failed");
-                         swal("Error. You shall not pass. Check spelling and upper/lowercase, 'cause you're not getting anywhere whilst failing to log in.");
+                         swal.fire({
+                         icon: 'error',
+                         title:"Error.",
+                         text: "You shall not pass. Check spelling and upper/lowercase, 'cause you're not getting anywhere whilst failing to log in.",
+                         showConfirmButton: true,
+                         confirmButtonColor: '#3085d6',
+                         confirmButtonText: '>:('
+                         });
                      })
          },
         signup(){
@@ -38,7 +51,13 @@ var app = new Vue({
                               };
                      $.post("/api/players", request)
                          .done(function(){
-                             swal("Hell yeah! Account created. Time to destroy some ships.");
+                             swal.fire({
+                             icon:'success',
+                             title: "Success.",
+                             text:"Hell yeah! Account created. Time to destroy some ships.",
+                             showConfirmButton: false,
+                             timer: 1500
+                             });
                          })
                          .then(function(){
                           $.post("/api/login", {username: request.userName, password: request.password})
@@ -47,19 +66,38 @@ var app = new Vue({
                                })
                           })
                          .fail(function(){
-                             swal("Error. Try something else so you can join our cult.");
+                             swal.fire({
+                             icon:'error',
+                             title:"Error.",
+                             text: "Try something else so you can join our cult.",
+                             showConfirmButton: true,
+                             confirmButtonColor: '#3085d6',
+                             confirmButtonText: '>:('
+                             });
                          })
              },
          logout(){
                   $.post("/api/logout")
                       .done(function(){
-                      swal("You're now logged out. Come back soon!");
+                      swal.fire({
+                      icon:'success',
+                      title:"You're now logged out. Come back soon!",
+                      showConfirmButton: false,
+                      timer: 1500
+                      });
                       location.reload();
                       $("#username").val("");
                       $("#password").val("");
                       })
                       .fail(function(){
-                        swal("Error: just to let you know, you're failing even at logging out.");
+                        swal.fire({
+                        icon: 'error',
+                        title:"Error.",
+                        text: "Just to let you know, you're failing even at logging out.",
+                        showConfirmButton: true,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: '>:('
+                        });
                       })
         },
         createGame(){
@@ -94,7 +132,14 @@ function getLeaderboard() {
     app.players = ranking;
     })
     .fail(function (jqXHR, textStatus) {
-      swal('Failed: ' + textStatus);
+      swal.fire({
+      icon: 'error',
+      title:'Failed',
+      text: textStatus,
+      showConfirmButton: true,
+      confirmButtonText: '>:(',
+      confirmButtonColor: '#3085d6'
+      });
     });
 }
 

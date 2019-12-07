@@ -117,17 +117,29 @@ function shoot(turno,locations){
         contentType: "application/json"
     })
     .done(function (response, status, jqXHR) {
-        alert( "SALVO FIRED!" );
+        swal.fire({
+        icon: 'success',
+        title: "SALVO FIRED!",
+        showConfirmButton: false,
+        timer: 1000
+        });
     })
     .then(function(){
         $('div[id^="salvoes"].grid-cell.target').removeClass("target").addClass("salvo");
         location.reload();
     })
     .fail(function (jqXHR, status, httpError){
-        alert("Failed to add salvo: " + status + " " + httpError);
-    })
+        swal.fire({
+        icon: 'error',
+        title: "Failed to fire salvo",
+        text: status + " " + httpError,
+        showConfirmButton: true,
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: '>:('
+        });
+        })
+    }
 
-}
 function backToMenu(){
     window.location.href = '/web/games.html';
 }

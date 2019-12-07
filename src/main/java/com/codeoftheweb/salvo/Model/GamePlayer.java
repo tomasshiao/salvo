@@ -60,12 +60,34 @@ public class GamePlayer {
     }
 
     public Map<String, Object> toDTO(){
+        GamePlayer opponent = this.getGame().getGamePlayers().stream().filter(oponente -> this.getId() != oponente.getId()).findFirst().orElse(null);
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
         dto.put("gpid", this.getId());
         dto.put("player", this.getPlayer().toDTO());
         dto.put("joinTime", this.getJoinTime());
+        //dto.put("hits", hitsDTO(this, opponent));
         return dto;
     }
 
+   /* private Map<String, Object> hitsDTO(GamePlayer self, GamePlayer opponent){
+        Map<String, Object> dto = new LinkedHashMap<>();
+        dto.put("gotHit", getHits(self, opponent));
+        dto.put("myHits", getHits(self, opponent));
+        return dto;
+    }
 
+    private List<Map> getHits(GamePlayer self, GamePlayer opponent){
+        List<Map> dto = new ArrayList<>();
+        int battleshipDamage = 0;
+        int carrierDamage = 0;
+        int destroyerDamage = 0;
+        int patrolboatDamage = 0;
+        int submarineDamage = 0;
+        List<String> battleshipLocation = new ArrayList<>();
+        List<String> carrierLocation = new ArrayList<>();
+        List<String> destroyerLocation = new ArrayList<>();
+        List<String> patrolboatLocation = new ArrayList<>();
+        List<String> submarineLocation = new ArrayList<>();
+        for(Ship ship: self.getShips())
+    } */
 }
