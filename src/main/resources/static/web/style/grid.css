@@ -3,8 +3,15 @@ body{
  color: white;
 }
 #warn{
-    color: yellow;
+    background-color: yellow;
 }
-p{
+#mensaje{
     color: white;
+    padding: 2%;
+}
+.wrapper{
+    text-align: center;
+}
+#boton{
+    position: relative;
 }
