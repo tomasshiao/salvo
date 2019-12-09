@@ -111,11 +111,20 @@ var app = new Vue({
         reenter(gamePlayers){
             var gamePlayerId = 0;
             if(gamePlayers[0].player.email == app.user.email){
-                gamePlayerId = gamePlayers[0].gpid
+                gamePlayerId = gamePlayers[0].gpid;
+                if(gamePlayers[0].hasShips == "YES"){
+                window.location.href = 'game.html?gp=' + gamePlayerId;
+                } else{
+                window.location.href = '/web/placeShipsGrid.html?gp=' + gamePlayerId;
+                }
             } else {
-                gamePlayerId = gamePlayers[1].gpid
+                gamePlayerId = gamePlayers[1].gpid;
+                if(gamePlayers[1].hasShips == "YES"){
+                window.location.href = 'game.html?gp=' + gamePlayerId;
+                } else{
+                window.location.href = '/web/placeShipsGrid.html?gp=' + gamePlayerId;
+                }
             }
-            window.location.href = 'game.html?gp=' + gamePlayerId;
         }
         },
     created: function(){
