@@ -207,3 +207,7 @@ body {
 .target{
     background-color: green;
 }
+
+.sunkenShip{
+    background-color: black;
+}

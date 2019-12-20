@@ -1,7 +1,8 @@
-var gamesData
-var actualPlayer
+var gamesData;
+var actualPlayer;
 var opponent={
 "email": "An incognito player whose identity is yet to be revealed."}
+var hitsConverted;
 
 //Para obtener el id del gamePlayer colocado como query en la url
 var gpId = getParameterByName("gp")
@@ -47,18 +48,32 @@ fetch("/api/game_view/"+ gpId)
            }
         })
     })
+.then(function(){
+    console.log(actualPlayer.id);
+    var salvoesFired = gamesData.salvoes.sort(function(a, b){return b.turn - a.turn;});
+    gameEvents.mySalvoHits = salvoesFired.filter(x => x.player == actualPlayer.id);
+    gameEvents.opponentsSalvoHits = salvoesFired.filter(x => x.player != actualPlayer.id);
+    var myHits = gameEvents.mySalvoHits.flatMap(salvo => salvo.hits);
+    var allMyHits = gameEvents.mySalvoHits.flatMap(salvo => salvo.hits);
+    var allMyHitLoc = gameEvents.mySalvoHits.flatMap(salvo => salvo.locations);
+    console.log(allMyHits);
+    hitsConverted = allMyHits.flatMap(hit => convert(hit[0]) + (parseInt(hit[1]) - 1));
+     hitsConverted.forEach(function(ubi){
+                $('#salvoes' + ubi).removeClass("salvo").addClass("ship-down");
+            })
+})
 .catch(function(error){
 	console.log(error)
 })
 
 function WhoIsWho(){
   for(i = 0; i < gamesData.gamePlayers.length; i++){
-    if(gamesData.gamePlayers[i].gpid == gpId){
-      actualPlayer = gamesData.gamePlayers[i].player
-    } else{
-      opponent = gamesData.gamePlayers[i].player
-    }
-  }
+       if(gamesData.gamePlayers[i].gpid == gpId){
+         actualPlayer = gamesData.gamePlayers[i].player
+       } else{
+         opponent = gamesData.gamePlayers[i].player
+       }
+     }
 
   let logger = document.getElementById("logger")
   let wrapper = document.createElement('DIV')
@@ -125,6 +140,7 @@ function shoot(turno,locations){
         });
     })
     .then(function(){
+        console.log(hitsConverted);
         $('div[id^="salvoes"].grid-cell.target').removeClass("target").addClass("salvo");
         location.reload();
     })
@@ -161,3 +177,35 @@ function getTurn (){
   }
 
 }
+
+function convert(letra){
+    if(letra == "A"){
+        return "0";
+    } else if(letra == "B"){
+        return "1";
+    } else if(letra == "C"){
+        return "2";
+    } else if(letra == "D"){
+        return "3";
+    } else if(letra == "E"){
+        return "4";
+    } else if(letra == "F"){
+        return "5";
+    } else if(letra == "G"){
+        return "6";
+    } else if(letra == "H"){
+        return "7";
+    } else if(letra == "I"){
+        return "8";
+    } else if(letra == "J"){
+        return "9";
+    }
+}
+
+var gameEvents = new Vue({
+    el: '#gameEvents',
+    data:{
+        mySalvoHits: [],
+        opponentsSalvoHits: []
+    }
+})

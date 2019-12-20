@@ -9,12 +9,18 @@
     <link rel="stylesheet" href="style/style2.css" />
     <link rel="stylesheet" href="style/grid.css" />
     <link rel="stylesheet" href="style/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 <body>
+
 <div class="row text-center" width="100%">
     <div id="logger" width="100%">
 
     </div>
+</div>
+<div class="row">
+    <div class="col col-6 botones"><button onclick="backToMenu()" class="btn btn-primary col col-2">Back</button></div>
+    <div class="col col-6 botones"> <button onclick="shoot()" class="btn btn-danger col col-2">FIRE!</button></div>
 </div>
 <div class="row">
     <div class="col col-6">
@@ -31,10 +37,41 @@
         </div>
     </div>
 </div>
-<div class="row align-items-center">
-<button onclick="backToMenu()" class="btn btn-primary col col-1">Back</button>
-<button onclick="shoot()" class="btn btn-danger col col-1">FIRE!</button>
+<div class="row" id="gameEvents">
+    <table class="table table-striped table-dark col col-6" width="100%" v-if="mySalvoHits.length != 0">
+        <thead>
+        <tr><th rowspam="3">You</th></tr>
+        <tr>
+            <th>Turn</th>
+            <th>Hits</th>
+            <th>Sunken Ships</th></tr>
+        </thead>
+        <tbody>
+        <tr v-for="x in mySalvoHits">
+            <td>{{x.turn}}</td>
+            <td>{{x.hits}}</td>
+            <td>{{x.sunkenShips.map(y => y.type)}}</td>
+        </tr>
+        </tbody>
+    </table>
+    <table class="table table-striped table-dark col col-6" width="100%" v-if="opponentsSalvoHits.length != 0">
+        <thead>
+        <tr><th rowspam="3">Opponent</th></tr>
+        <tr>
+            <th>Turn</th>
+            <th>Hits</th>
+            <th>Sunken Ships</th></tr>
+        </thead>
+        <tbody>
+        <tr v-for="x in opponentsSalvoHits">
+            <td>{{x.turn}}</td>
+            <td>{{x.hits}}</td>
+            <td>{{x.sunkenShips.map(y => y.type)}}</td>
+        </tr>
+        </tbody>
+    </table>
 </div>
+
 
 <!-- <script  src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script> -->
 <script src="dist/jquery-3.4.1.min.js"></script>
